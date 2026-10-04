@@ -11,7 +11,24 @@
 -- policies at all: the anon key can read nothing, and the server connects with
 -- the service key which bypasses RLS. That means a leaked anon key exposes
 -- nothing, and there are no subtle policy holes to get wrong.
+--
+-- GRANTS — the second lock, and the one PMConnect never needed to write
+-- This project is created with "Automatically expose new tables" switched
+-- OFF (Supabase's default for projects created from 30 May 2026). With it off,
+-- a new table is granted to none of the API roles: not anon, not
+-- authenticated, and not service_role — the role this app's server uses for
+-- everything. So access is granted here, explicitly, to service_role alone.
+-- The anon key then has no privileges on any table at all, on top of RLS
+-- refusing it, which is two locks where PMConnect had one.
 -- =============================================================================
+
+-- Every table created from here on by the SQL Editor (which runs as postgres),
+-- including all the numbered files that follow this one, is granted to the
+-- server's role the moment it exists. Nothing is granted to anon or
+-- authenticated.
+alter default privileges for role postgres in schema public
+  grant select, insert, update, delete on tables to service_role;
+grant usage on schema public to service_role;
 
 -- ----------------------------------------------------------------- households
 create table if not exists households (
@@ -154,7 +171,8 @@ create table if not exists admins (
 );
 
 insert into admins (email) values
-  ('anandjain0498@gmail.com')
+  ('anandjain0498@gmail.com'),
+  ('marwadisamajindore@gmail.com')
   on conflict (email) do nothing;
 
 -- ------------------------------------------------------------- keep timestamps
@@ -184,6 +202,10 @@ alter table comments   enable row level security;
 alter table issues     enable row level security;
 alter table change_log enable row level security;
 alter table admins     enable row level security;
+
+-- Belt and braces for the tables above, in case this file is ever run on a
+-- project whose default privileges were set differently.
+grant select, insert, update, delete on all tables in schema public to service_role;
 
 -- ------------------------------------------------------------- photo storage
 -- Member photos live in a private bucket, not in the database

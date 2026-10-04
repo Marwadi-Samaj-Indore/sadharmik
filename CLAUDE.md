@@ -141,7 +141,18 @@ Spreadsheets, `.data/` and every `.env*` except the example are in `.gitignore`,
 was written before the first commit. **Never commit member data.**
 
 SQL migrations are numbered files in `supabase/`, applied by hand in the Supabase SQL
-Editor; the schema seeds `admins`. Give each one a short title when handing it over.
+Editor, `schema.sql` first; it seeds `admins`. Give each one a short title when handing
+it over.
+
+**Grants are explicit here, unlike PMConnect.** The project has "Automatically expose
+new tables" OFF (Supabase's default for projects created from 30 May 2026), so a new
+table is granted to no API role — not even `service_role`, which every server read
+uses — and fails with `42501 permission denied`. `schema.sql` sets
+`alter default privileges for role postgres … to service_role`, so any table created
+afterwards in the SQL Editor is covered automatically. A table created any other way
+(CLI, another role) needs its own `grant select, insert, update, delete … to
+service_role`. Never grant to `anon` or `authenticated`: the anon key is used only for
+the Google OAuth round trip.
 
 ## Deploying
 

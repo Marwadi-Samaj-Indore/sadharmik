@@ -93,12 +93,20 @@ repository page.
 
 ## 2. Supabase — the database and photo storage &nbsp; *(you, then me)*
 
-1. At supabase.com, signed in as the owning account, **New project**:
-   - Name: `sadharmik`
-   - Region: **Mumbai (ap-south-1)** — PMConnect's serverless functions already run in
-     Mumbai, and the database should sit next to them
-   - Database password: let it generate one, and **save it** — you'll rarely need it,
-     but you can't recover it later
+1. At supabase.com, in the **Marwadi Samaj Indore** organisation, **New project**.
+   Field by field:
+
+   | Field | Choose | Why |
+   |---|---|---|
+   | Organization | **Marwadi Samaj Indore** | The samaj's own, as with GitHub |
+   | GitHub (optional) | **Leave it unconnected** | It only applies SQL kept in Supabase's own `supabase/migrations/` layout. Ours is pasted into the SQL Editor by hand, as PMConnect's is. Linking adds a second way to change the database that nobody uses. It can be connected later |
+   | Project name | `Sadharmik App` (any name works) | Only you see it |
+   | Database password | Click **Generate a password**, then **save it in your password manager** | Rarely needed, can't be recovered. Don't send it to anyone, including me |
+   | Region | **Mumbai** specifically — open the dropdown and pick the city, not the general "Asia-Pacific" | The app's server runs in Mumbai; the database must be next to it. "Asia-Pacific" lets Supabase choose, which may be Singapore |
+   | Enable Data API | **On** | The app reads and writes through it |
+   | Automatically expose new tables | **Off** | Supabase recommends off. Sadharmik's SQL grants access to the server alone, so the public key can't even see the tables |
+   | Enable automatic RLS | **On** | A safety net: any table ever added is locked by default. Every table in our SQL locks itself anyway |
+
 2. Wait a minute for it to provision, then collect, from **Project Settings**:
    - *Data API* → **Project URL** (`https://xxxx.supabase.co`)
    - *API Keys* → **anon / public** key (safe to be public)
@@ -107,14 +115,11 @@ repository page.
 3. Send me the first two. **Don't paste the service_role key into a chat.** Put it
    straight into `.env.local` yourself when we get to step 5, or into Vercel in step 6.
 
-**What I do with it:** give you the SQL to paste. PMConnect's schema is nine numbered
-files applied by hand in the SQL Editor; Sadharmik's will be the same files folded into
-fewer, plus the sangh level. Each one is "paste, press Run", safe to run twice, and I'll
-hand each over with a short title so you can save it by name. The admin list is seeded
-in that SQL — so before that step I need the **Google addresses of the samaj admins**.
-
-The SQL also creates the private photo bucket (`member-photos`). Nothing to click in
-Storage.
+**Then the SQL, pasted in this order** in *SQL Editor → New query → Run*: `schema.sql`
+first, then `002` to `008`. Each is safe to run twice. `schema.sql` must go first: it
+grants the server access to every table the later files create. The admins it seeds are
+`anandjain0498@gmail.com` and `marwadisamajindore@gmail.com`. It also creates the private
+photo bucket (`member-photos`), so there's nothing to click in Storage.
 
 ---
 
@@ -235,6 +240,5 @@ plus however long DNS takes to settle, usually under an hour.
 | | Needed for |
 |---|---|
 | Supabase Project URL and anon key | `.env.local.example` and the first deploy (step 2) |
-| Google addresses of the samaj admins | the admin seed in the SQL (step 2) |
 
 Everything in steps 3, 6 and 7 can happen while I'm building.
