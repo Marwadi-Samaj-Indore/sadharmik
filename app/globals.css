@@ -1,0 +1,740 @@
+@import "tailwindcss";
+
+/* Redefines `hover:` app-wide to only fire on devices that can genuinely
+   hover. Without this, a tap on a touchscreen can leave `:hover` stuck
+   showing — the back button staying visibly highlighted after the tap
+   until the member touches somewhere else. A mouse or trackpad still gets
+   every hover state; a phone, which is what this app is built for, never
+   shows one that doesn't clear. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Sadharmik — design system
+
+   Kesar (saffron) on a warm cream. Kesar is the paste applied to the Jina in
+   Shwetambar Murtipujak puja, so the colour is the samaj's own, not decoration.
+   The card language, radii and spacing are inherited from PMConnect unchanged.
+
+   The one rule kesar imposes: #FF6331 measures 2.97:1 against white, so it is a
+   plate, an accent and a mark, never a label. White text sits on kesar-deep;
+   saffron WORDS use kesar-text or kesar-ink, which clear 4.5:1 on every card.
+   docs/palette-sample.html shows every pairing with its measured contrast.
+
+   Two constraints shape everything below:
+   1. The membership skews older. 18px base, generous tap targets, real
+      contrast. Nothing decorative may cost legibility.
+   2. Most members are on mid-range Android phones on mobile data. Motion is
+      transform and opacity only — never layout — so it stays at 60fps.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Surfaces */
+  --color-cream: #fdf8f1;
+  --color-cream-deep: #f7eee4;
+  --color-surface: #ffffff;
+
+  /* Kesar. The brand colour itself (kesar) carries ink, never white text. */
+  --color-kesar-pale: #ffe4db;
+  --color-kesar-mist: #fff1eb;
+  --color-kesar-soft: #ff9a78;
+  --color-kesar: #ff6331;
+
+  /* Actions. kesar-deep is a plate for white labels (4.8:1). kesar-text is the
+     same hue as words — kesar-deep itself drops to 3.97:1 on a kesar-pale card,
+     so it never sets text. kesar-ink is the pressed state and small emphasis. */
+  --color-kesar-deep: #d73400;
+  --color-kesar-text: #c32f00;
+  --color-kesar-ink: #a12700;
+
+  /* Text — three weights of emphasis, all AA against cream */
+  --color-ink: #1c1917;
+  --color-ink-soft: #5c5048;
+  /* Dates and authorship — small but genuinely informative, so it clears
+     4.5:1 rather than being treated as decoration: 5.59:1 on cream. */
+  --color-ink-faint: #6e6259;
+
+  /* Lines & status */
+  --color-line: #ebdfd4;
+  --color-line-soft: #f3eae2;
+  --color-danger: #9c2f27;
+  --color-danger-soft: #f7e4e1;
+  --color-warn-soft: #fdf1e3;
+  /* Text that sits on the birthday plate. It flips with the theme because the
+     plate does: dark amber in light mode, light amber in dark. */
+  --color-on-birthday: #ffffff;
+  /* Darkened from #b25f2c, which measured 4.39:1 on cream — under the 4.5:1
+     minimum at the 11px size it's used at, and it carries real information
+     ("In 2 days"), so it can't be decorative-only contrast. */
+  --color-birthday: #96481c;
+
+  /* Radii — a deliberate scale, not arbitrary values per component */
+  --radius-card: 1.25rem;
+  --radius-inner: 0.875rem;
+  --radius-chip: 999px;
+
+  /* Type sizes above Tailwind's own scale. Four steps only, each named for
+     the one job it does — the four sizes this app actually needed once the
+     drift was traced (a scattering of one-off values — 1.45/1.5/1.6/1.7/1.75/
+     1.05/0.9375/0.8125rem, no two components agreeing) got mapped onto real
+     jobs instead. Everything smaller than these already fits Tailwind's own
+     text-xs/sm/base/lg/xl/2xl/3xl/4xl, which are left untouched.
+     Paired --text-*--line-height values replace the ad hoc leading-[…]
+     utilities that used to sit next to each one. */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.35;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.3;
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.2;
+  --text-hero: 1.625rem;
+  --text-hero--line-height: 1.2;
+  --text-tab-title: 1.75rem;
+  --text-tab-title--line-height: 1.15;
+
+  /* Type. Three faces, three jobs — Jakarta speaks for the app (buttons,
+     titles, chips), Inter for information, Fraunces only ever for a name.
+     Devanagari sits in every stack before the system fonts so Hindi renders
+     in a face drawn to match, not whatever the OS reaches for.
+     These chains only resolve because the next/font variables sit on <html>
+     — see the note in app/layout.tsx before "simplifying" that. */
+  --font-display: var(--font-jakarta), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), var(--font-devanagari), Georgia, serif;
+
+  /* Motion. Entrances ease out; exits are quicker than entrances, which is
+     what makes an interface feel responsive rather than sluggish. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 340ms;
+
+  /* Elevation. Warm-tinted rather than grey — a neutral shadow on a cream
+     ground reads as dirt. Three levels only. */
+  --shadow-rest: 0 1px 2px rgba(74, 32, 12, 0.05);
+  --shadow-raised: 0 2px 8px -2px rgba(74, 32, 12, 0.09),
+    0 6px 20px -6px rgba(74, 32, 12, 0.07);
+  --shadow-float: 0 8px 24px -8px rgba(74, 32, 12, 0.18),
+    0 2px 6px -2px rgba(74, 32, 12, 0.1);
+}
+
+/* ----------------------------------------------------------------- dark mode
+
+   Tonal, not inverted. Flipping cream to black would throw away the brand and
+   produce the harsh white-on-pure-black that older eyes struggle with most.
+   Instead the ground becomes a warm charcoal with an ember cast, and the kesar
+   actions lighten so they stay legible — dark surfaces need light accents, not
+   the same dark ones.
+
+   Shadows barely register on a dark ground, so elevation is carried by
+   surface lightness and hairline borders instead.
+
+   Dark is opt-in. The app is Light by default whatever the phone is set to,
+   because members expect the cream look they were shown and many phones sit in
+   dark mode by accident. The choice lives under Me.
+
+   Keyed on one attribute so there is a single dark block. "Match my phone" is
+   resolved to dark or light before paint by the inline script in the root
+   layout, so it also lands here rather than needing a duplicate media query.
+   --------------------------------------------------------------------------- */
+/* The way in is always cream, whatever the member has chosen for the app.
+   The lockup is drawn for that ground, and the sign-in screen is the one place
+   nobody has yet asked for anything — they are meeting the parivar, not using
+   their settings. A page opts out by marking itself `on-cream`, which makes
+   this whole block miss and leaves the light values from @theme standing, so
+   there is no second copy of nineteen colours to keep in step.
+
+   :has() is in every browser that matters; where it isn't, the block applies
+   as before and the page is merely dark, which is what it was yesterday. */
+:root[data-theme="dark"]:not(:has(.on-cream)) {
+  color-scheme: dark;
+
+  --color-cream: #16110e;
+  --color-cream-deep: #1e1713;
+  --color-surface: #221a15;
+
+  --color-kesar-pale: #3a2218;
+  --color-kesar-mist: #2a1a13;
+  --color-kesar-soft: #b5543a;
+  --color-kesar: #ff7a50;
+
+  /* Actions invert: light kesar plate, dark ink on top (9.1:1). Text and
+     plate can share a tone here — on a dark ground it reads at 7:1 or more. */
+  --color-kesar-deep: #ff9a78;
+  --color-kesar-text: #ff9a78;
+  --color-kesar-ink: #ffb49a;
+
+  --color-ink: #f4ebe3;
+  --color-ink-soft: #c9b9ae;
+  /* 6.67:1 on the dark ground — same bar as light mode */
+  --color-ink-faint: #a8978c;
+
+  --color-line: #3a2e27;
+  --color-line-soft: #2e241e;
+
+  --color-danger: #f2a49b;
+  --color-danger-soft: #3a201d;
+  --color-birthday: #e5a86e;
+  --color-warn-soft: #3a2a19;
+  --color-on-birthday: #16110e;
+
+  --shadow-rest: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-raised: 0 2px 10px -2px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 10px 28px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* Everything else dark has to answer the same question as the block above —
+   is this page dark at all — so it hangs off one selector rather than five
+   that could drift apart. Anything dark added later belongs in here. */
+:root[data-theme="dark"]:not(:has(.on-cream)) {
+  /* On a light plate the label must be dark, not white */
+  & .btn-primary,
+  & .chip-active {
+    color: #16110e;
+  }
+
+  /* The sweep across a skeleton has to darken, not flash white */
+  & .skeleton::after {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.06),
+      transparent
+    );
+  }
+
+  /* Takes the glare off photographs on a dark ground */
+  & img {
+    filter: brightness(0.94);
+  }
+
+}
+
+/* --------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* 18px base instead of 16. Every size in the app is in rem, so this one
+       line scales the whole interface for older readers. */
+    font-size: 112.5%;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
+    /* Stops the layout jolting sideways when a short page follows a long one */
+    scrollbar-gutter: stable;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    /* Tighter tracking as size grows — large type set at body tracking looks
+       loose and amateurish */
+    letter-spacing: -0.021em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: -0.028em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2.5px solid var(--color-kesar-deep);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  label {
+    -webkit-tap-highlight-color: transparent;
+    /* Removes the ~300ms wait mobile browsers add before firing a tap while
+       they check for a double-tap. Without it every button feels a beat late. */
+    touch-action: manipulation;
+  }
+
+  /* Images always occupy their space before they load, so text never jumps */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Phone numbers, dates and counts must not jitter as digits change */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  ::selection {
+    background: var(--color-kesar-pale);
+    color: var(--color-kesar-ink);
+  }
+}
+
+@layer components {
+  /* --------------------------------------------------------------------- mark */
+
+  /* The samaj's own logo. It arrived as a JPEG on white with no vector
+     original, so logo/samaj-logo-cutout.png was cut from it: transparent around
+     the lotus, the white disc inside kept. That one file sits on cream, on
+     white and on the dark theme alike, so there is a single class and a single
+     file. The artwork carries the samaj's name but not the app's, so the
+     screens set "Sadharmik" as text beneath it. */
+  .lockup,
+  .lockup-plain {
+    aspect-ratio: 1 / 1;
+    background: url("/logo-lockup.webp") center / contain no-repeat;
+  }
+
+  /* ---------------------------------------------------------------- surfaces */
+
+  .card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-line-soft);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-rest);
+  }
+
+  /* Filled card — reserved for the one thing that matters most on a screen */
+  .card-fill {
+    background-color: var(--color-kesar-pale);
+    border: 1px solid transparent;
+    border-radius: var(--radius-card);
+  }
+
+  .card-mist {
+    background-color: var(--color-kesar-mist);
+    border: 1px solid var(--color-line-soft);
+    border-radius: var(--radius-card);
+  }
+
+  /* Rows that lead somewhere lift very slightly on press */
+  .card-tap {
+    transition:
+      transform var(--dur-fast) var(--ease-out-soft),
+      box-shadow var(--dur-fast) var(--ease-out-soft),
+      background-color var(--dur-fast) linear;
+  }
+
+  .card-tap:active {
+    transform: scale(0.985);
+    box-shadow: var(--shadow-rest);
+    background-color: var(--color-kesar-mist);
+  }
+
+  /* ------------------------------------------------------------------ chips */
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    /* 2.5rem at an 18px base is 45px — chips are tappable filters and tabs,
+       so they have to clear the 44px minimum like any other control */
+    min-height: 2.5rem;
+    gap: 0.375rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-chip);
+    background-color: var(--color-surface);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-base) var(--ease-out-soft),
+      color var(--dur-base) var(--ease-out-soft),
+      border-color var(--dur-base) var(--ease-out-soft),
+      transform var(--dur-fast) var(--ease-out-soft);
+  }
+
+  .chip:active {
+    transform: scale(0.96);
+  }
+
+  .chip-active {
+    background-color: var(--color-kesar-deep);
+    border-color: var(--color-kesar-deep);
+    color: #fff;
+    box-shadow: var(--shadow-rest);
+  }
+
+  /* ---------------------------------------------------------------- buttons */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    /* Comfortably above the 44px minimum at an 18px base */
+    min-height: 2.75rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-chip);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    transition:
+      transform var(--dur-fast) var(--ease-out-soft),
+      background-color var(--dur-base) var(--ease-out-soft),
+      box-shadow var(--dur-base) var(--ease-out-soft),
+      opacity var(--dur-base) linear;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Scale only — never a property that moves neighbouring content */
+  .btn:active {
+    transform: scale(0.965);
+  }
+
+  .btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-primary {
+    background-color: var(--color-kesar-deep);
+    color: #fff;
+    box-shadow: var(--shadow-raised);
+  }
+
+  .btn-primary:active {
+    background-color: var(--color-kesar-ink);
+    box-shadow: var(--shadow-rest);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-kesar-pale);
+    color: var(--color-kesar-ink);
+  }
+
+  .btn-ghost {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-rest);
+  }
+
+  .btn-danger {
+    background-color: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+
+  /* ------------------------------------------------------------------ forms */
+
+  .field {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.6875rem 0.875rem;
+    background-color: var(--color-kesar-mist);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-inner);
+    font-size: 1rem;
+    color: var(--color-ink);
+    transition:
+      border-color var(--dur-base) var(--ease-out-soft),
+      background-color var(--dur-base) var(--ease-out-soft),
+      box-shadow var(--dur-base) var(--ease-out-soft);
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+
+  .field:focus {
+    /* kesar-deep, not kesar: a focus ring needs 3:1 and bright kesar is 2.97:1 */
+    border-color: var(--color-kesar-deep);
+    background-color: var(--color-surface);
+    box-shadow: 0 0 0 3.5px rgba(138, 162, 107, 0.18);
+    outline: none;
+  }
+
+  /* A field that has failed validation gets its own colour, not just a
+     message below it — the message explains why, the border is what a
+     member actually sees when they glance back up at the form. */
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+    background-color: var(--color-danger-soft);
+  }
+
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--color-danger) 20%, transparent);
+  }
+
+  .field:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* WebKit paints its own blue clear-× inside type="search" — the only blue
+     in the product, unstylable, so it goes. Queries here are short; erasing
+     them is what the keyboard is for. */
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Privacy switch. A checkbox labelled "Hide my mobile number" makes the
+     member invert the logic in their head; a switch beside the word Hidden
+     or Visible states the outcome. Pure CSS over the real checkbox — the
+     form submits exactly as before, and the state words swap on the same
+     :checked the server reads (checked = hidden, matching the stored field).
+     Visually the switch answers "is this visible?" — Visible is the filled,
+     knob-right ON position, Hidden the grey knob-left OFF — because a grey
+     switch beside the word "Visible" made members trust neither. */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 2.75rem;
+    height: 1.625rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background-color: var(--color-kesar-deep);
+    transition: background-color var(--dur-fast) var(--ease-out-soft);
+  }
+
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 999px;
+    background-color: var(--color-surface);
+    /* The knob needs an edge of its own — white on the pale OFF track (and
+       dark-on-dark in dark mode) otherwise dissolves into it */
+    border: 1px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
+    box-shadow: var(--shadow-rest);
+    transform: translateX(1.125rem);
+    transition: transform var(--dur-fast) var(--ease-out-soft);
+  }
+
+  input:checked ~ .switch {
+    background-color: var(--color-line);
+  }
+
+  input:checked ~ .switch::after {
+    transform: translateX(0);
+  }
+
+  input:focus-visible ~ .switch {
+    outline: 2px solid var(--color-kesar-deep);
+    outline-offset: 2px;
+  }
+
+  .switch-state-off,
+  input:checked ~ .switch-state-on {
+    display: none;
+  }
+
+  input:checked ~ .switch-state-off {
+    display: inline;
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: var(--text-caption);
+    font-weight: 600;
+    letter-spacing: 0.004em;
+    color: var(--color-ink-soft);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.014em;
+  }
+
+  /* Horizontal chip rails — scroll without a visible scrollbar */
+  .rail {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    /* Snapping aligns a chip's edge to the scrollport, which is the padding
+       box — so on a rail that carries its own px-4 the first chip snapped
+       flush to the screen edge and ate the padding. Matching scroll-padding
+       keeps that first chip inset like every other row on the page. */
+    scroll-padding-inline: 1rem;
+  }
+
+  .rail > * {
+    scroll-snap-align: start;
+  }
+
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* In landscape on a notched phone the camera cut-out eats the left or right
+     edge. Every full-width surface has to inset past it. */
+  .safe-x {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  /* Sticky headers get a hairline only once content slides beneath them */
+  .bar-blur {
+    background-color: color-mix(in srgb, var(--color-cream) 88%, transparent);
+    backdrop-filter: saturate(1.6) blur(14px);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  }
+}
+
+/* ------------------------------------------------------------------- motion */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* The RSVP count springs when it changes — confirmation you can feel.
+   Killed wholesale by the reduced-motion block below. */
+@keyframes count-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.22);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.count-pop {
+  display: inline-block;
+  animation: count-pop 260ms var(--ease-spring);
+}
+
+/* The Wish-on-WhatsApp tap — the emotional core of Home, so it answers with
+   more than a colour change: the button springs back from the press while a
+   single soft ring radiates and fades, like the tap left a ripple. One ring,
+   once, transform and opacity only. The reduced-motion block below collapses
+   it to nothing; the press still navigates, which is the real feedback. */
+@keyframes wish-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+.wish-ring {
+  animation: wish-ring 480ms var(--ease-out-soft) both;
+}
+
+.rise {
+  animation: rise var(--dur-slow) var(--ease-out-soft) both;
+}
+
+/* Deliberately no entrance animation on lists.
+   Every millisecond an item spends fading in is a millisecond the member is
+   looking at nothing. Content that is ready should be on screen. Motion is
+   reserved for things the member causes — pressing, switching tabs — where it
+   confirms an action rather than delaying one. */
+
+/* Skeleton placeholder with a light sweep */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-cream-deep);
+  border-radius: var(--radius-inner);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+/* Screens appear immediately.
+   A fade on every navigation added 220ms of nothing on top of the server
+   response — the single biggest reason the app felt sluggish on a real phone.
+   Tapping a tab should feel like the screen was already there. */
+.screen-enter {
+  animation: none;
+}
+
+/* ------------------------------------------------------------ reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .btn:active,
+  .chip:active,
+  .card-tap:active {
+    transform: none;
+  }
+
+  .skeleton::after {
+    display: none;
+  }
+}

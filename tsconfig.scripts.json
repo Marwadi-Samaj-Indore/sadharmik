@@ -1,0 +1,12 @@
+{
+  // The scripts run under plain `node --experimental-strip-types`, importing
+  // lib files with explicit .ts extensions that the app tsconfig rejects —
+  // which also meant check-logic.ts, the only test suite, was never seen by
+  // tsc at all. This config exists so `npm run typecheck` covers it too.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true
+  },
+  "include": ["scripts/**/*.ts"],
+  "exclude": ["node_modules"]
+}
