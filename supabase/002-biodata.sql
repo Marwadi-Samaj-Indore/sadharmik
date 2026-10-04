@@ -11,11 +11,11 @@
 -- family should message.
 -- =============================================================================
 
--- An earlier draft keyed this table on person_id. Replace it if that shape
--- was ever created; nothing depends on it yet.
-drop table if exists biodata;
-
-create table biodata (
+-- PMConnect's copy of this file began by dropping the table, to replace an early
+-- draft keyed on person_id. Sadharmik never had that draft, and a drop here would
+-- wipe every shared biodata if the file were ever run again, so it creates the
+-- table only when missing, like every other file.
+create table if not exists biodata (
   id            text primary key,
   title         text not null,          -- name of the person the biodata is for
   file_path     text not null,
