@@ -58,7 +58,7 @@ export default async function HomePage() {
               tab-title size as every other tab's masthead — the serif is
               what distinguishes it, not a one-off size of its own. */}
           <h1 className="font-serif text-tab-title font-semibold tracking-[-0.01em]">
-            Sadharmik
+            Marwadi Samaj Indore
           </h1>
         </div>
         {/* The samaj's own logo. Decorative — the heading beside it names the

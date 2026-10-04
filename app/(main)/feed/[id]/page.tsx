@@ -136,7 +136,7 @@ export default async function PostPage({
           <a
             href={whatsappLink(
               contactNumber,
-              `Jai Jinendra ${author?.firstName ?? ""}, regarding your post "${post.title}" on Sadharmik —`
+              `Jai Jinendra ${author?.firstName ?? ""}, regarding your post "${post.title}" on the Marwadi Samaj Indore app —`
             )}
             target="_blank"
             rel="noopener noreferrer"

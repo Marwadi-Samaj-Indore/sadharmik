@@ -96,7 +96,7 @@ export function WelcomeSheet() {
 
         <div className="pt-3 text-center">
           {/* The samaj's logo, then the app's name beneath it — the artwork
-              carries the samaj's name in Devanagari but not "Sadharmik". */}
+              carries the samaj's name in Devanagari; this sets it in English. */}
           <h2 id="welcome-title">
             <span
               role="img"
@@ -104,7 +104,7 @@ export function WelcomeSheet() {
               className="lockup-plain mx-auto block w-full max-w-[7.5rem]"
             />
             <span className="mt-3 block font-serif text-title font-semibold tracking-[-0.01em]">
-              Sadharmik
+              Marwadi Samaj Indore
             </span>
           </h2>
           <p className="mt-1.5 text-sm text-ink-soft">

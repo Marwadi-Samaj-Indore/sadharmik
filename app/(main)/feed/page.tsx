@@ -129,7 +129,7 @@ export default async function FeedPage({
       uploaderPhoto: uploader?.privacy.hidePhoto ? null : uploader?.photo ?? null,
       sharedAgo: relativeTime(b.createdAt),
       whatsapp: wa,
-      whatsappMessage: `Jai Jinendra ${uploader?.firstName ?? ""}, I saw the matrimonial profile for ${b.title} you shared on Sadharmik and would like to know more.`,
+      whatsappMessage: `Jai Jinendra ${uploader?.firstName ?? ""}, I saw the matrimonial profile for ${b.title} you shared on the Marwadi Samaj Indore app and would like to know more.`,
       canRemove:
         session.isAdmin ||
         Boolean(session.person && b.uploaderPersonId === session.person.id),

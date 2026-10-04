@@ -53,7 +53,7 @@ export async function GET() {
   return new Response(`﻿${csv}`, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="sadharmik-directory-${stamp}.csv"`,
+      "Content-Disposition": `attachment; filename="marwadi-samaj-indore-directory-${stamp}.csv"`,
       "Cache-Control": "no-store",
     },
   });

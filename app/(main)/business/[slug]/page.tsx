@@ -110,7 +110,7 @@ export default async function CategoryPage({
                       <a
                         href={whatsappLink(
                           wa,
-                          `Jai Jinendra ${p.firstName}, I found you in the Sadharmik directory under ${category}.`
+                          `Jai Jinendra ${p.firstName}, I found you in the Marwadi Samaj Indore app under ${category}.`
                         )}
                         target="_blank"
                         rel="noopener noreferrer"

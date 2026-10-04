@@ -12,7 +12,7 @@
 -- =============================================================================
 
 -- PMConnect's copy of this file began by dropping the table, to replace an early
--- draft keyed on person_id. Sadharmik never had that draft, and a drop here would
+-- draft keyed on person_id. This app never had that draft, and a drop here would
 -- wipe every shared biodata if the file were ever run again, so it creates the
 -- table only when missing, like every other file.
 create table if not exists biodata (

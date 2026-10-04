@@ -50,7 +50,7 @@ const devanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "Sadharmik",
+  title: "Marwadi Samaj Indore",
   description:
     "The private member directory of Shri Jain Shwetambar (Murtipujak) Marwadi Samaj, Indore. Find members and discover what they do.",
   manifest: "/manifest.json",
@@ -64,7 +64,9 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "Sadharmik",
+    // The label under the home-screen icon: an iPhone shows about twelve
+    // characters, so the full name would be cut to "Marwadi Sam…"
+    title: "Marwadi Samaj",
     statusBarStyle: "default",
   },
   // A private community directory must never be indexed

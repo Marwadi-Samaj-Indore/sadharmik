@@ -16,7 +16,7 @@ const looksLikeKey = (k, kind) =>
   kind === "public" ? k.startsWith("sb_publishable_") || k.startsWith("eyJ")
                     : isNewSecret(k) || k.startsWith("eyJ");
 
-console.log("\nSadharmik — setup check\n");
+console.log("\nMarwadi Samaj Indore — setup check\n");
 console.log("1. The settings file");
 if (!existsSync(".env.local")) { fail(".env.local not found", "copy .env.local.example to .env.local (SETUP.md step 5)"); process.exit(1); }
 

@@ -4,8 +4,12 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 
-**Sadharmik** — a private PWA member directory for **Shri Jain Shwetambar (Murtipujak)
-Marwadi Samaj, Indore**. The product is Sadharmik; the samaj keeps its own name in every
+**Marwadi Samaj Indore** — a private PWA member directory for **Shri Jain Shwetambar (Murtipujak)
+Marwadi Samaj, Indore**. Renamed from *Sadharmik* on 4 Oct 2026: every user-facing string
+says "Marwadi Samaj Indore" (home-screen label "Marwadi Samaj", which fits under an icon), while
+the plumbing keeps `sadharmik` — repo, Vercel project and URL, package name, cookie
+prefix `sdm_`, Supabase project — because renaming those breaks links and sessions for
+nothing. The samaj keeps its own name in every
 user-facing string about the people ("samaj members", "Samaj Karyakarini"). Next.js 15
 App Router, React 19, Tailwind v4, Supabase (Postgres + Storage), Vercel. Five bottom
 tabs: Home, Directory, Business, Feed, Me.
@@ -128,7 +132,7 @@ The logo is the samaj's own (`logo/`), supplied as a JPEG with no vector origina
 `logo/samaj-logo-cutout*.png` is the transparent cut-out every public image is
 generated from. One file serves cream, white and dark grounds, so `.lockup` and
 `.lockup-plain` are the same. The artwork carries the samaj's name but not the app's,
-so screens set "Sadharmik" as serif text beneath it. App icons are interim until the
+so screens set the name in English, in the serif, beneath it. App icons are interim until the
 committee decides whether a store-facing icon carries the swastik (`SPEC.md` §5).
 
 Type: Fraunces for names only, Jakarta for the interface, Inter for reading, Noto Sans

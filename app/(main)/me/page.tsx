@@ -300,7 +300,7 @@ export default async function MePage() {
         <div className="card mx-4 p-4">
           <p className="flex items-center gap-2 text-sm font-semibold">
             <Share2 size={ICON.sm} />
-            Add Sadharmik to your home screen
+            Add the app to your home screen
           </p>
           <ol className="mt-2.5 space-y-1.5 text-xs leading-relaxed text-ink-soft">
             <li>

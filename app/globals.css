@@ -15,7 +15,7 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Sadharmik — design system
+   Marwadi Samaj Indore — design system
 
    Kesar (saffron) on a warm cream. Kesar is the paste applied to the Jina in
    Shwetambar Murtipujak puja, so the colour is the samaj's own, not decoration.
@@ -303,7 +303,7 @@
      the lotus, the white disc inside kept. That one file sits on cream, on
      white and on the dark theme alike, so there is a single class and a single
      file. The artwork carries the samaj's name but not the app's, so the
-     screens set "Sadharmik" as text beneath it. */
+     screens set the name in English beneath it. */
   .lockup,
   .lockup-plain {
     aspect-ratio: 1 / 1;

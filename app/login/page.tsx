@@ -65,7 +65,7 @@ export default async function LoginPage({
           className="lockup mx-auto block w-full max-w-[10.5rem]"
         />
         <span className="mt-4 block font-serif text-tab-title font-semibold tracking-[-0.01em] text-ink">
-          Sadharmik
+          Marwadi Samaj Indore
         </span>
       </h1>
 

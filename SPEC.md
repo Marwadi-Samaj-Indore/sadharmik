@@ -1,4 +1,4 @@
-# Sadharmik — app plan and direction
+# Marwadi Samaj Indore — app plan and direction
 
 Living document. Last updated: 3 October 2026.
 Decisions below are confirmed unless marked **OPEN**. It is written to be read next to the PM
@@ -44,7 +44,7 @@ over. What changes is listed in §7; it is a short list for a reason.
 | Platform, later — **OPEN** | **Android on Google Play** — the PWA packaged as a Trusted Web Activity. Google built this route for exactly this; the app in the store *is* the live site, so there is nothing to rebuild | ₹2,100 one-time (Play Console) |
 | Platform, later — **OPEN** | **iPhone on the App Store** — see §8; this is the one that costs real work | ₹8,300/yr (Apple Developer Program) + a Mac to build on |
 | Framework / database / hosting | Next.js · Supabase · Vercel, unchanged | ₹0 on free tiers |
-| Domain | To buy, in the samaj trust's name. `sadharmik.in` / `sadharmik.app` to check | ~₹700–1,200/yr |
+| Domain | To buy, in the samaj trust's name. name to match the app, e.g. `marwadisamajindore.in`, to check | ~₹700–1,200/yr |
 | **Running cost until the store phases** | | **Domain only** |
 
 **One budget line PMConnect never had to worry about.** Supabase's free tier gives 1 GB
@@ -64,7 +64,7 @@ dropdown, `noindex` and sign-in on every page, no data outside the samaj.
 
 | # | Decision | Detail |
 |---|---|---|
-| 1 | **App name** | **Sadharmik** (confirmed 3 October 2026) — the Jain word for a fellow follower of the faith; *sadharmik vatsalya*, care for one's fellow Jains, is the exact thing the app exists for. The samaj stays "Jain Shwetambar Marwadi Samaj" wherever the app refers to the people |
+| 1 | **App name** | **Marwadi Samaj Indore** (changed 4 October 2026; home-screen label "Marwadi Samaj"). It was **Sadharmik** (3 October 2026) — the Jain word for a fellow follower of the faith; *sadharmik vatsalya*, care for one's fellow Jains, is the exact thing the app exists for. The samaj stays "Jain Shwetambar Marwadi Samaj" wherever the app refers to the people |
 | 2 | **Login** | Google sign-in, as PMConnect. One tap after the first visit |
 | 3 | **Joining** | **As PMConnect, for now:** every member is either in the imported sheet or **added by an admin in the app**, and passes the 10-digit mobile gate once. Self-registration with vouching/approval is **deferred** — it is designed (join form, pending queue, sangh admin approves) and can be added without touching anything built before it, so nothing here closes that door |
 | 4 | **Structure** | **Samaj → household → person for now**, as PMConnect. The **sangh level** (samaj → sangh → household → person) is liked and designed, and **deferred** (4 October 2026) until there is a sangh list. Adding it later is one table and one column on households; nothing built before it has to change |

@@ -1,5 +1,5 @@
 -- =============================================================================
--- Sadharmik — database schema
+-- Marwadi Samaj Indore app — database schema
 --
 -- Paste this whole file into the Supabase SQL Editor and press Run.
 -- Safe to run more than once.

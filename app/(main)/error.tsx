@@ -19,7 +19,7 @@ export default function ErrorScreen({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Sadharmik — screen failed to load:", error);
+    console.error("Screen failed to load:", error);
   }, [error]);
 
   return (

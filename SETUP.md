@@ -1,4 +1,7 @@
-# Setting up Sadharmik — the accounts, in order
+# Setting up the Marwadi Samaj Indore app — the accounts, in order
+
+> The app was called *Sadharmik* when this was written. Account and project names
+> below keep that word — they're internal, and renaming them would break links.
 
 This is the list of things that have to exist before the code can run anywhere but your
 own laptop. It mirrors how PMConnect was set up, with two changes called out where the

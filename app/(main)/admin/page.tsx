@@ -227,7 +227,7 @@ export default async function AdminPage() {
                 <a
                   href={whatsappLink(
                     person.whatsapp,
-                    `Jai Jinendra ${person.firstName}, this is from the samaj committee. Please open the Sadharmik app and complete your profile — especially your photo and business details, so other members can find you. Thank you!`
+                    `Jai Jinendra ${person.firstName}, this is from the samaj committee. Please open the Marwadi Samaj Indore app and complete your profile — especially your photo and business details, so other members can find you. Thank you!`
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

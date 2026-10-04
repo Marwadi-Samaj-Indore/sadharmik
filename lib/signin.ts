@@ -2,7 +2,7 @@
  * Whether members sign in through Google first, or with their mobile number
  * alone.
  *
- * OFF while Sadharmik is being tested (owner's decision, 4 Oct 2026): Google
+ * OFF while the app is being tested (owner's decision, 4 Oct 2026): Google
  * isn't connected yet, and the samaj wanted people able to get in meanwhile.
  * Know what this trades away. With Google, a stranger needs a member's Google
  * account; without it, a stranger needs only a member's mobile number — and
