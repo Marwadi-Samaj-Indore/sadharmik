@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from "lucide-react";
 import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
-import { celebrations } from "@/lib/celebrations";
-import { CelebrationCard } from "@/components/CelebrationCard";
 import { SectionHeading, Meter, Badge } from "@/components/ui";
 import {
   completion,
@@ -29,12 +27,6 @@ function monogram(name: string): string {
 
 export default async function HomePage() {
   const [db, session] = await Promise.all([getDb(), getSession()]);
-
-  // Three days only, by committee decision — a long list of distant birthdays
-  // buries the ones members can actually act on today
-  const upcoming = celebrations(db, 3);
-  const today = upcoming.filter((c) => c.days === 0);
-  const soon = upcoming.filter((c) => c.days > 0);
 
   const pinned = db.announcements.find((a) => a.pinned) ?? null;
   const activeRequirements = db.requirements
@@ -159,37 +151,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Today — only when there is something to celebrate. An empty state
-          here just told every member "nothing is happening" on most days,
-          which is not worth the space. */}
-      {today.length > 0 && (
-        <section className="mt-6">
-          <SectionHeading>Celebrations Today</SectionHeading>
-          <div className="space-y-3 px-4">
-            {today.map((entry) => (
-              <CelebrationCard
-                key={entry.kind === "birthday" ? entry.person.id : entry.household.id}
-                entry={entry}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Next three days */}
-      {soon.length > 0 && (
-        <section className="mt-6">
-          <SectionHeading>Upcoming Celebrations</SectionHeading>
-          <div className="space-y-3 px-4">
-            {soon.map((entry) => (
-              <CelebrationCard
-                key={entry.kind === "birthday" ? entry.person.id : entry.household.id}
-                entry={entry}
-              />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* No birthday or anniversary wishes here, unlike PM Parivar: the samaj
+          runs to thousands of members, and a daily list of strangers'
+          birthdays is noise rather than closeness. Dates stay on profiles. */}
 
       {/* Latest requirements */}
       {activeRequirements.length > 0 && (

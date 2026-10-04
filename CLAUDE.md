@@ -18,13 +18,15 @@ the owner, who is not a developer. `README.md` is in the same register.
 
 ## Current state
 
-- **Supabase is not configured yet.** There is no offline mode: every screen, including
-  sign-in (which shows member counts), reads the database. Until `.env.local` exists
-  the app builds but no page renders. Verify appearance against a real project.
-- **No importer yet.** PMConnect's importers read PM Parivar's spreadsheet and were not
-  copied. The source here is `BOOK 2 TAPPAN SIR.xlsx`, MAIN SHEET only — layout and
-  quirks in `SPEC.md` §6. Same for the logic test suite (`check-logic.ts`), which held
-  PM Parivar member data and is rewritten alongside the importer.
+- **Supabase is configured** (project "Sadharmik App", Mumbai) and `.env.local` is
+  filled; `npm run check:setup` passes. Book 2 is loaded: 131 households, 660 people,
+  128 needs-attention issues.
+- **Importer:** `scripts/import-book2.mjs` (`npm run import`, then `npm run migrate`).
+  The bracketed number is the book's own family number (1–225), not S.NO — the book
+  gives two families (193); the repeat gets id `h193-<sno>` and an issue. IDs are
+  `h<n>` and `p<n>-<i>`. The logic test suite (`check-logic.ts`) is not rewritten yet.
+- **No birthday or anniversary wishes** (owner's decision, 4 Oct 2026): Home has no
+  celebrations section; DOB and anniversary stay as profile information.
 - **Not copied on purpose:** every PMConnect script that contained real members' names
   or phone numbers (screenshot, recording, verification and seed scripts). Never bring
   PM Parivar data into this repository.
@@ -40,7 +42,8 @@ the owner, who is not a developer. `README.md` is in the same register.
 | `npm run dev` | Dev server on port **3310** (PMConnect uses 3210; both can run at once) |
 | `npm run build` | Production build |
 | `npm run typecheck` | Typecheck the app — there is no lint script. `tsconfig.scripts.json` is kept for the test suite; when `scripts/check-logic.ts` returns, add `&& tsc -p tsconfig.scripts.json` back, as PMConnect has |
-| `npm run migrate` | Pushes `.data/db.json` into Supabase (upserts) — needs the importer first |
+| `npm run import` | Reads the spreadsheet into `.data/db.json`; prints counts only |
+| `npm run migrate` | Pushes `.data/db.json` into Supabase (upserts) |
 
 **Never run `npm run build` while `npm run dev` is up.** They share `.next`; the build
 overwrites the dev server's chunks and the running app silently stops hydrating — client
@@ -108,7 +111,7 @@ plate with dark text, as in PMConnect.
 
 | Token | Took over from PMConnect | Job |
 |---|---|---|
-| `kesar` | `sage-deep` | accent fills: the profile-completion bars, the wish ring. Not focus rings — those need 3:1, so they use `kesar-deep` |
+| `kesar` | `sage-deep` | accent fills: the profile-completion bars, the WhatsApp-button ring. Not focus rings — those need 3:1, so they use `kesar-deep` |
 | `kesar-pale`, `kesar-mist` | `sage-pale`, `sage-mist` | soft cards, chips, selected rows |
 | `kesar-deep` | `olive` (as a background) | primary buttons, focus rings, active chips |
 | `kesar-text` | `olive` (as text) | links and saffron words |
@@ -133,7 +136,7 @@ H–AE and opens on a HOW TO FILL sheet; columns A–G are the original data, un
 Every name ends in a bracketed family number like `(17)` — keep it as the household's
 permanent ID.
 
-**When writing the importer:** read Excel dates as raw serials and convert
+The importer reads Excel dates as raw serials and converts them
 arithmetically (`new Date(Math.round((raw - 25569) * 86400000))`). SheetJS's
 `cellDates: true` shifts old dates back a day; it bit two PMConnect importers.
 

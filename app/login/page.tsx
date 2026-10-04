@@ -68,8 +68,8 @@ export default async function LoginPage({
       </h1>
 
       <p className="mx-auto mt-6 max-w-[19rem] text-center text-sm leading-relaxed text-ink-soft">
-        Our own member directory. Find any member, see what they do, and never
-        miss a birthday or anniversary.
+        Our own member directory. Find any member, see what they do, and
+        reach them in one tap.
       </p>
 
       {/* The samaj's own size, said once and said where it counts: the last

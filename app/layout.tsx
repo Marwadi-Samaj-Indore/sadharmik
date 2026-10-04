@@ -52,7 +52,7 @@ const devanagari = Noto_Sans_Devanagari({
 export const metadata: Metadata = {
   title: "Sadharmik",
   description:
-    "The private member directory of Shri Jain Shwetambar (Murtipujak) Marwadi Samaj, Indore. Find members, discover what they do, and never miss a birthday.",
+    "The private member directory of Shri Jain Shwetambar (Murtipujak) Marwadi Samaj, Indore. Find members and discover what they do.",
   manifest: "/manifest.json",
   icons: {
     icon: [

@@ -6,6 +6,7 @@
     "dev": "next dev -p 3310",
     "build": "next build",
     "start": "next start -p 3310",
+    "import": "node scripts/import-book2.mjs",
     "migrate": "node --env-file=.env.local scripts/migrate-to-supabase.mjs",
     "typecheck": "tsc --noEmit",
     "sql": "node scripts/combine-sql.mjs",

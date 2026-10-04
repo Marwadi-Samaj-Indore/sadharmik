@@ -10,8 +10,10 @@ decisions wherever the two communities are alike, and changes only where they ar
 ## 1. What this is, and how it differs from PMConnect
 
 A private member directory and connection app for **Shri Jain Shwetambar (Murtipujak)
-Marwadi Samaj, Indore** — the name as it appears on the samaj's own logo (`logo/`). Same three purposes as PMConnect — know what members do for a living, know
-birthdays and anniversaries, find and contact anyone fast — and the same five tabs,
+Marwadi Samaj, Indore** — the name as it appears on the samaj's own logo (`logo/`). Two of PMConnect's three purposes — know what members do for a living, find and
+contact anyone fast. The third, birthday and anniversary wishes, is **dropped**
+(owner's decision, 4 Oct 2026): this is a community-wide directory of thousands, not a
+social group, and a daily list of strangers' birthdays is noise. Otherwise the same five tabs,
 the same screens, the same way of working. A member who has used one will know the other.
 
 The difference is **what kind of community it is**, and that changes four things that
@@ -22,7 +24,7 @@ run underneath every screen:
 | **Kind** | A social group — one committee, one WhatsApp group | A religious samaj — the Indore Shwetambar Marwadi community, organised under a Mahasangh with area-level sanghs (Rajendra Nagar, …), temple trusts and upashrays |
 | **Size** | 191 households, 451 people | Thousands of households. The exact figure is open item #2 |
 | **Where the member list comes from** | One spreadsheet the committee already had | A **sample list** (Book 2, 131 families) to start. People rarely hand their details over for a spreadsheet, so members complete their own profiles **in the app**, and admins add new families there too. Self-registration is **deferred** (see §3 #3) |
-| **Reason to open it daily** | Birthdays, the next meeting | Birthdays, **plus the dharmik calendar** — Paryushan, Samvatsari, Ayambil Oli, Chaturmas, Mahavir Jayanti — and the samaj notices that follow them |
+| **Reason to open it daily** | Birthdays, the next meeting | **The dharmik calendar** — Paryushan, Samvatsari, Ayambil Oli, Chaturmas, Mahavir Jayanti — and the samaj notices that follow them |
 
 Everything in §3 onwards follows from those four rows.
 
@@ -81,8 +83,8 @@ dropdown, `noindex` and sign-in on every page, no data outside the samaj.
 The layout is PMConnect's. Nothing moves; some things are added.
 
 ### 🏠 Home
-- **Today's parv**, when there is one — the dharmik calendar entry for the day sits above the birthdays, because on Samvatsari morning that is the reason the app was opened
-- Birthdays and anniversaries with one-tap *Wish on WhatsApp*, pinned announcement, next event, profile nudge — as PMConnect
+- **Today's parv**, when there is one — the dharmik calendar entry for the day sits at the top, because on Samvatsari morning that is the reason the app was opened
+- Pinned announcement, next event, profile nudge — as PMConnect. **No birthday or anniversary wishes** (removed 4 Oct 2026); dates of birth and anniversaries stay on profiles as information only
 - The **Karyakarini** (office bearers) section PMConnect calls "Committee"
 
 ### 👥 Directory
@@ -199,8 +201,7 @@ second look are shaded yellow: **116 members with no relation** and **5 mobile
 numbers that aren't 10 digits**. Every original cell was compared before and after:
 none changed. The untouched original is kept beside it.
 
-**Until dates of birth are entered, the Home screen's birthday list will be empty.**
-That is the first thing to ask members for once they're in. Meanwhile the importer
+Dates of birth are profile information only (there are no birthday wishes). Meanwhile the importer
 stores each age as an approximate birth year, which PMConnect's data model already
 supports.
 

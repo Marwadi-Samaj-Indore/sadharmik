@@ -65,7 +65,7 @@ export function SkeletonRows({ count = 6 }: { count?: number }) {
   );
 }
 
-/** Birthday / announcement card on the Home screen. */
+/** Announcement card on the Home screen. */
 export function SkeletonCard() {
   return (
     <div className="card p-3.5">

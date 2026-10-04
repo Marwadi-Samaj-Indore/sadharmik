@@ -1,8 +1,8 @@
 # Sadharmik
 
 The private member directory of **Shri Jain Shwetambar (Murtipujak) Marwadi Samaj,
-Indore**. Find any member, see what they do for a living, and never miss a birthday,
-an anniversary or a parv.
+Indore**. Find any member, see what they do for a living, and reach them in
+one tap.
 
 It's a **PWA** — one web app that installs to the home screen on iPhone and Android —
 built on the same code as the PM Parivar app (PMConnect), with the samaj's own logo and

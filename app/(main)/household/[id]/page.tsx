@@ -38,8 +38,6 @@ export default async function HouseholdPage({
     session.isAdmin || session.person?.householdId === household.id;
   // Completed years, not the ordinal — "· 30 years" beside a November date
   // in August would be claiming an anniversary they haven't reached yet.
-  // The wish message keeps the ordinal ("Happy 30th"), which is right on
-  // the day itself.
   const anniversaryYears = ageFrom(household.anniversary);
 
   return (

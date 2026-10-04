@@ -107,28 +107,6 @@ export function ageFrom(iso: string | null, today = new Date()): number | null {
   return age >= 0 && age < 120 ? age : null;
 }
 
-/**
- * Days until the next occurrence of this day-and-month. 0 means today.
- * Year is ignored, which is what a birthday reminder actually needs.
- */
-export function daysUntilAnnual(iso: string | null, today = new Date()): number | null {
-  const p = parts(iso);
-  if (!p) return null;
-
-  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  let next = new Date(today.getFullYear(), p.month - 1, p.day);
-  if (next < startOfToday) next = new Date(today.getFullYear() + 1, p.month - 1, p.day);
-
-  return Math.round((next.getTime() - startOfToday.getTime()) / 86400000);
-}
-
-export const ordinalYears = (iso: string | null, today = new Date()) => {
-  const p = parts(iso);
-  if (!p) return null;
-  const years = today.getFullYear() - p.year;
-  return years > 0 && years < 100 ? years : null;
-};
-
 export function relativeTime(iso: string, now = new Date()) {
   const diff = now.getTime() - new Date(iso).getTime();
   const mins = Math.round(diff / 60000);
@@ -188,24 +166,6 @@ export const mapsLink = (household: Household) =>
 
 export const displayPhone = (phone: string) =>
   `${phone.slice(0, 5)} ${phone.slice(5)}`;
-
-/* --------------------------------------------------- wish message templates */
-
-export function birthdayMessage(p: Person) {
-  return `Happy Birthday ${p.firstName}! Wishing you a very healthy and joyful year ahead. — from your samaj parivar`;
-}
-
-export function anniversaryMessage(h: Household) {
-  const years = ordinalYears(h.anniversary);
-  return `Happy${years ? ` ${years}${suffix(years)}` : ""} Wedding Anniversary to ${
-    h.familyName
-  }! Wishing you both continued happiness together. — from your samaj parivar`;
-}
-
-const suffix = (n: number) => {
-  if (n % 100 >= 11 && n % 100 <= 13) return "th";
-  return ["th", "st", "nd", "rd"][n % 10] ?? "th";
-};
 
 /* ---------------------------------------------------------------- completion */
 
