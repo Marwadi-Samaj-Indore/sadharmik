@@ -1,0 +1,32 @@
+node_modules/
+.next/
+out/
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# ---------------------------------------------------------------------------
+# MEMBER PERSONAL DATA — never commit any of this.
+#
+# The spreadsheets hold hundreds of families' phone numbers, ages and home
+# addresses. The live data belongs in Supabase, not in a code repository. The
+# spreadsheet stays on the committee's own machine as a local import source.
+# This file exists BEFORE the folder is a git repository on purpose, so the
+# first `git add` can never pick the sheet up by accident.
+# ---------------------------------------------------------------------------
+*.xlsx
+*.xls
+*.csv
+.data/
+
+# Secrets — the Supabase service key lives here. Never commit.
+# Every .env variant is ignored, but the placeholder template stays tracked so
+# a future maintainer can see which variables the app needs.
+.env*
+!.env.local.example
+
+# Vercel CLI local state
+.vercel
+
+# Design-pass screenshot output
+.screenshots/

@@ -1,0 +1,240 @@
+# Setting up Sadharmik — the accounts, in order
+
+This is the list of things that have to exist before the code can run anywhere but your
+own laptop. It mirrors how PMConnect was set up, with two changes called out where the
+PMConnect way turned out to be a nuisance. Each step says **who** does it — most are
+yours, because they are accounts in your name (or the samaj's), and I can't create those.
+
+Keep the values you collect in one place as you go — a note on your laptop, **not** a
+WhatsApp message to yourself. Three of them are secrets.
+
+---
+
+## 0. One decision before anything: whose accounts?
+
+PMConnect's biggest open item is "add a second owner, so the group never depends on one
+person's account". Start Sadharmik the other way round.
+
+**Recommended:** create one Google account for the samaj — something like
+`sadharmik.app@gmail.com` — and make *it* the owner of GitHub, Supabase, Vercel and
+Google Cloud below. Add your own account as a member or admin of each. If the committee
+changes hands, the password changes hands; nothing has to be migrated.
+
+If you'd rather start on your own account to move fast, that works too — but then
+"transfer ownership to the samaj account" goes on the to-do list from day one.
+
+---
+
+## 1. GitHub — where the code lives &nbsp; *(you, about five minutes)*
+
+> **Done, 4 October 2026.** Organisation **Marwadi-Samaj-Indore** (display name "Marwadi
+> Samaj Indore"); private repository **`Marwadi-Samaj-Indore/sadharmik`**. This folder
+> uploads to it over SSH, using the same key your portfolio already uses. The steps
+> below stay as the record of how it was done.
+
+**What it is, in one line:** GitHub is a safe for the app's code. Every change is kept,
+with a note of what changed and when, so nothing is ever lost and any change can be
+undone. Vercel (step 6) watches this safe and puts each new version online by itself.
+The member spreadsheet never goes in — the folder's `.gitignore` already forbids it.
+
+**Where things stand on this Mac:** you are already signed in to GitHub here as
+**anandja1n**, and you're an admin of one organisation, **PM-Parivar**. An
+*organisation* is a shared GitHub account owned by a group rather than a person —
+PMConnect's code lives in `PM-Parivar/pm-parivar-social`.
+
+**Give Sadharmik its own organisation, not a folder inside PM-Parivar.** It belongs to
+a different community. When the samaj's committee takes it over, they should receive
+their own organisation, with nothing of PM Parivar's attached.
+
+### 1a. Create the organisation — on the website (GitHub only allows this there)
+
+1. Go to **github.com/organizations/plan** while signed in.
+2. Choose **Free**.
+3. **Organization account name:** `Sadharmik` (if it's taken: `Sadharmik-Indore` or
+   `JSM-Samaj-Indore`). This becomes part of the code's web address, so keep it plain.
+4. **Contact email:** the samaj's Google account if you've made one (see step 0),
+   otherwise yours.
+5. **This organization belongs to:** *My personal account* is fine for now. It can be
+   changed to a business or institution later.
+6. Click **Next**, skip the "add members" screen (**Skip this step**), and finish.
+
+### 1b. Create the repository — either way works
+
+A *repository* ("repo") is one project inside the organisation — the actual safe.
+
+**Option A — I do it, one command.** Tell me the organisation name you chose in 1a,
+and I'll run this on your Mac:
+
+```bash
+gh repo create Sadharmik/sadharmik --private --description "Member directory for Shri Jain Shwetambar (Murtipujak) Marwadi Samaj, Indore"
+```
+
+It creates an empty, private repository and nothing else. Same outcome as Option B.
+
+**Option B — by hand on the website.**
+
+1. Go to **github.com/new**.
+2. **Owner:** pick the new organisation from the dropdown (not anandja1n).
+3. **Repository name:** `sadharmik`.
+4. **Private** — not Public. The code holds no member data, but there's no reason for
+   it to be visible.
+5. Leave **all three** boxes unticked — no README, no .gitignore, no licence. The folder
+   already has its own, and a repository that starts with files in it makes the first
+   upload awkward.
+6. **Create repository.** Ignore the instructions page that follows; send me the
+   address at the top, which looks like `https://github.com/Sadharmik/sadharmik`.
+
+**What I do next:** turn this folder into a git project, copy PMConnect's code in
+(without its data, secrets, screenshots or history), rename it, apply the saffron
+colours, make the first save, and upload it. You'll see the files appear on the
+repository page.
+
+---
+
+## 2. Supabase — the database and photo storage &nbsp; *(you, then me)*
+
+1. At supabase.com, signed in as the owning account, **New project**:
+   - Name: `sadharmik`
+   - Region: **Mumbai (ap-south-1)** — PMConnect's serverless functions already run in
+     Mumbai, and the database should sit next to them
+   - Database password: let it generate one, and **save it** — you'll rarely need it,
+     but you can't recover it later
+2. Wait a minute for it to provision, then collect, from **Project Settings**:
+   - *Data API* → **Project URL** (`https://xxxx.supabase.co`)
+   - *API Keys* → **anon / public** key (safe to be public)
+   - *API Keys* → **service_role** key (click Reveal) — **secret; this key can read
+     and change everything**
+3. Send me the first two. **Don't paste the service_role key into a chat.** Put it
+   straight into `.env.local` yourself when we get to step 5, or into Vercel in step 6.
+
+**What I do with it:** give you the SQL to paste. PMConnect's schema is nine numbered
+files applied by hand in the SQL Editor; Sadharmik's will be the same files folded into
+fewer, plus the sangh level. Each one is "paste, press Run", safe to run twice, and I'll
+hand each over with a short title so you can save it by name. The admin list is seeded
+in that SQL — so before that step I need the **Google addresses of the samaj admins**.
+
+The SQL also creates the private photo bucket (`member-photos`). Nothing to click in
+Storage.
+
+---
+
+## 3. Google sign-in &nbsp; *(you — this is the fiddly one)*
+
+Google sign-in needs Google to know the app exists. It's a one-time setup, about 20
+minutes, done in two places.
+
+**In Google Cloud** (console.cloud.google.com, signed in as the owning account):
+
+1. Create a project named `Sadharmik`.
+2. *APIs & Services → OAuth consent screen*: **External**; app name **Sadharmik**;
+   support email and developer contact — the samaj account. Save. You do **not** need to
+   add scopes beyond the defaults, and you don't need to "publish" the app for testing.
+3. *APIs & Services → Credentials → Create credentials → OAuth client ID*:
+   - Type: **Web application**, name `Sadharmik`
+   - **Authorised redirect URI** — exactly this, with your project's ref from step 2:
+     `https://xxxx.supabase.co/auth/v1/callback`
+   - It gives you a **Client ID** and **Client secret**. Keep both to hand.
+
+**In Supabase:**
+
+4. *Authentication → Providers → Google*: enable it, paste the Client ID and secret.
+5. *Authentication → URL Configuration*:
+   - **Site URL**: your Vercel address once it exists (step 6); `http://localhost:3310`
+     until then
+   - **Redirect URLs** — add every place the app can live, each ending in
+     `/auth/callback`:
+     - `http://localhost:3310/auth/callback`
+     - `https://sadharmik.vercel.app/auth/callback` (or whatever Vercel gives you)
+     - the real domain, when you have one
+
+If sign-in later fails with "redirect_uri_mismatch", it's always step 3's URI or step 5's
+list. Nothing else produces that message.
+
+> **Why port 3310, not PMConnect's 3210.** You'll have both apps on this laptop. Two
+> dev servers can't share a port, and the error when they try is confusing. Sadharmik
+> gets 3310.
+
+---
+
+## 4. The spreadsheet &nbsp; *(nothing urgent)*
+
+**`BOOK 2 TAPPAN SIR.xlsx` is a sample list**, not the whole samaj. It seeds the app with
+real families so every screen has something in it. The rest comes in through the app:
+members fill in their own details, and admins add new families there.
+
+The sheet carries **every field the app holds**, so a fuller list can be imported the
+same way whenever one turns up. It opens on a **HOW TO FILL** sheet; in short:
+
+- Columns A–G are untouched. The new columns, **H to AE**, are coloured by kind:
+  kesar = family, gold = person, blue = contact, green = work.
+- Family columns (area, city, pincode, gotra, native place, maps link) are filled once,
+  on the head's row. They're greyed out on members' rows.
+- **Yellow cells** in columns C and F need checking: 116 members with no relation
+  written, and 5 mobile numbers that aren't 10 digits.
+- Nobody has to fill the empty columns before launch. Empty is fine.
+
+The untouched original is kept beside it as `BOOK 2 TAPPAN SIR (original, untouched).xlsx`.
+Both stay on your laptop: the folder's `.gitignore` stops any `.xlsx` from being uploaded.
+
+---
+
+## 5. Running it on your laptop &nbsp; *(you, five minutes, once the code is in)*
+
+You already have Node from PMConnect. In a terminal, inside this folder:
+
+```bash
+npm install
+```
+
+Copy `.env.local.example` to `.env.local` and fill in: the Supabase URL and anon key
+from step 2, the service_role key (typed by you, not pasted from a chat), an
+`ADMIN_ACCESS_CODE` of your choosing (the committee's emergency door — if it contains a
+`#`, put it in quotes), and a long random `SESSION_SECRET`.
+
+```bash
+npm run dev
+```
+
+Opens at **http://localhost:3310**. Then `npm run import` builds the local copy from the
+spreadsheet, `npm run check` runs the logic tests against it, and `npm run migrate`
+pushes it up to Supabase.
+
+---
+
+## 6. Vercel — the hosting &nbsp; *(you)*
+
+**This is the one place I'd deliberately not copy PMConnect.** PMConnect's Vercel project
+has no link to GitHub, so every deploy is a terminal command — `npx vercel --prod` — and
+nothing goes live until someone remembers to run it. For Sadharmik, link the two:
+
+1. At vercel.com, signed in as the owning account, **Add New → Project → Import** the
+   `sadharmik` repository from GitHub. Framework is detected as Next.js. Region is
+   already set to Mumbai by `vercel.json` in the code.
+2. Before the first deploy, add the **Environment Variables** — the same names as
+   `.env.local`:
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+   `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_ACCESS_CODE`, `SESSION_SECRET`, and
+   `NEXT_PUBLIC_SITE_URL` (the Vercel address, e.g. `https://sadharmik.vercel.app`).
+3. Deploy. From then on, **every push to `main` goes live by itself**, and every branch
+   gets its own preview address — which is the "test copy" PMConnect maintains by hand.
+4. Go back to step 3.5 and put the Vercel address into Supabase's redirect list.
+
+---
+
+## 7. Domain &nbsp; *(you, later — nothing waits on it)*
+
+`sadharmik.in` and `sadharmik.app` are worth checking first. Buy it in the samaj's name
+(the registrar account, like the rest, on the owning account), then in Vercel
+*Project → Domains* add it and follow the two DNS records it asks for. Takes ten minutes
+plus however long DNS takes to settle, usually under an hour.
+
+---
+
+## What I need from you to start
+
+| | Needed for |
+|---|---|
+| Supabase Project URL and anon key | `.env.local.example` and the first deploy (step 2) |
+| Google addresses of the samaj admins | the admin seed in the SQL (step 2) |
+
+Everything in steps 3, 6 and 7 can happen while I'm building.
