@@ -15,6 +15,7 @@ import {
 } from "@/lib/session";
 import { checkSignInRate, recordFailedSignIn } from "@/lib/ratelimit";
 import { shortName } from "@/lib/util";
+import { GOOGLE_SIGN_IN } from "@/lib/signin";
 
 /**
  * Answering the mobile gate is itself proof of ownership, so record the
@@ -26,14 +27,19 @@ import { shortName } from "@/lib/util";
  * An address already on the row is never overwritten: a second person in the
  * household signing in must not take over the first one's claim.
  */
+const MOBILE_ONLY = "verified-by-mobile";
+
 async function claimProfile(personId: string, email: string | null) {
   const db = await getDb();
   const person = db.people.find((p) => p.id === personId);
-  if (!person || person.claimedByEmail) return;
+  // The mobile-only placeholder gives way to a real address, so a member who
+  // signed in before Google was switched on is still recognised after it
+  const placeholder = person?.claimedByEmail === MOBILE_ONLY;
+  if (!person || (person.claimedByEmail && !(placeholder && email))) return;
 
   await savePerson({
     ...person,
-    claimedByEmail: email ?? "verified-by-mobile",
+    claimedByEmail: email ?? MOBILE_ONLY,
   });
 }
 
@@ -63,6 +69,11 @@ export async function verifyMobile(
         rate.minutesUntilReset === 1 ? "" : "s"
       }.`,
     };
+  }
+
+  // With Google on, the number is a second step, never a way round the first
+  if (GOOGLE_SIGN_IN && !(await googleEmail())) {
+    return { error: "Please continue with Google first." };
   }
 
   let digits = String(formData.get("mobile") ?? "").replace(/\D/g, "");

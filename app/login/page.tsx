@@ -6,6 +6,8 @@ import { getDb } from "@/lib/db";
 import { ICON } from "@/lib/icons";
 import { AdminSignIn } from "./AdminSignIn";
 import { GoogleSignIn } from "./GoogleSignIn";
+import { VerifyForm } from "@/app/verify/VerifyForm";
+import { GOOGLE_SIGN_IN } from "@/lib/signin";
 
 /**
  * The page is cream whatever the phone is set to, so the browser chrome has to
@@ -100,16 +102,23 @@ export default async function LoginPage({
           </p>
         )}
 
-        <GoogleSignIn />
-
-        <p className="mx-auto mt-4 max-w-[18rem] text-center text-caption leading-relaxed text-ink-soft">
-          The first time, you&apos;ll enter your mobile number once so we can
-          find your profile.
-        </p>
+        {GOOGLE_SIGN_IN ? (
+          <>
+            <GoogleSignIn />
+            <p className="mx-auto mt-4 max-w-[18rem] text-center text-caption leading-relaxed text-ink-soft">
+              The first time, you&apos;ll enter your mobile number once so we can
+              find your profile.
+            </p>
+          </>
+        ) : (
+          // While Google is off, the mobile number IS the way in — the same
+          // form the Google route ends at, so nothing new to trust or test
+          <VerifyForm />
+        )}
       </div>
 
-      {/* The promise that matters to somebody being asked for their Google
-          account. It is the same promise the Me tab makes, made earlier. */}
+      {/* The promise that matters to somebody being asked who they are. It is
+          the same promise the Me tab makes, made earlier. */}
       <p className="mx-auto mb-9 mt-7 max-w-[12.5rem] text-center text-xs leading-relaxed text-ink-faint">
         <Lock size={ICON.xs} className="mr-1.5 inline-block -translate-y-px" />
         Private to samaj members. Nothing here is public.

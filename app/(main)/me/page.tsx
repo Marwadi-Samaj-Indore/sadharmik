@@ -190,9 +190,9 @@ export default async function MePage() {
                   <SectionHeading>Not you?</SectionHeading>
                   <div className="card mx-4 p-4">
                     <p className="text-xs leading-relaxed text-ink-soft">
-                      If your family shares one Google account, the app opens as
-                      whoever set it up first. Tap your own name to use it as
-                      yourself — it stays that way on this phone until you switch
+                      If your family shares one phone number or account, the app
+                      opens as whoever signed in first. Tap your own name to use it
+                      as yourself — it stays that way on this phone until you switch
                       back or sign out.
                     </p>
                     <ul className="mt-3 space-y-2">

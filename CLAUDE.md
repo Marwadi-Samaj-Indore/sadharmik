@@ -74,6 +74,13 @@ import them, or types from them, into a client component (`Theme` lives in
 
 ### Auth
 
+**Google is OFF during testing** (`lib/signin.ts`, `GOOGLE_SIGN_IN = false`, owner's
+decision 4 Oct 2026): the mobile number alone signs a member in, on the sign-in page
+itself. That is weak — members' numbers are printed in the samaj's book — so turn it
+back on, after SETUP.md step 3, before the app goes beyond testers. A profile claimed by
+mobile carries the `verified-by-mobile` placeholder, which a real Google address later
+replaces. The description below is how it works with the flag on.
+
 Google is the front door; a **full 10-digit mobile number** is the one-time introduction
 that records the Google address on the member's row (the spreadsheet has almost no
 email addresses). A number shared by a household offers every member of it. Sessions

@@ -1,6 +1,7 @@
 import type { Viewport } from "next";
 import { redirect } from "next/navigation";
 import { getSession, googleEmail } from "@/lib/session";
+import { GOOGLE_SIGN_IN } from "@/lib/signin";
 import { VerifyForm } from "./VerifyForm";
 
 /** Cream page, cream chrome — same reason as the sign-in screen before it. */
@@ -13,6 +14,8 @@ export default async function VerifyPage() {
   // Google comes first, always. Reaching the gate without having proved an
   // address means a stale link or a bookmark from the old flow — start over
   // rather than offering a way in that skips a required step.
+  // With Google off, the mobile form lives on the sign-in page itself
+  if (!GOOGLE_SIGN_IN) redirect("/login");
   const proven = await googleEmail();
   if (!proven) redirect("/login");
 
