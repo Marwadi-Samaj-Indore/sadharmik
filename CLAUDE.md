@@ -168,8 +168,12 @@ the Google OAuth round trip.
 
 ## Deploying
 
-Planned: Vercel linked to GitHub (`Marwadi-Samaj-Indore/sadharmik`), so every push to
-`main` deploys — unlike PMConnect, which deploys by CLI only. Functions run in Mumbai
+Vercel project `sadharmik` in the owner's own Hobby account (`freezepink`), linked to
+GitHub (`Marwadi-Samaj-Indore/sadharmik`), so every push to `main` deploys — unlike
+PMConnect, which deploys by CLI only. The five env vars were pasted by the owner, never
+through a chat. Before launch it moves to an account the samaj owns, behind its own
+domain, so the address members install from never changes. Never use the Vercel or
+Supabase connectors in Claude sessions for this project: they belong to other people. Functions run in Mumbai
 (`bom1`, `vercel.json`), next to the database.
 
 ## Conventions
