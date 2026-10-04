@@ -115,11 +115,42 @@ repository page.
 3. Send me the first two. **Don't paste the service_role key into a chat.** Put it
    straight into `.env.local` yourself when we get to step 5, or into Vercel in step 6.
 
-**Then the SQL, pasted in this order** in *SQL Editor → New query → Run*: `schema.sql`
-first, then `002` to `008`. Each is safe to run twice. `schema.sql` must go first: it
-grants the server access to every table the later files create. The admins it seeds are
-`anandjain0498@gmail.com` and `marwadisamajindore@gmail.com`. It also creates the private
-photo bucket (`member-photos`), so there's nothing to click in Storage.
+### 2a. Check the project (30 seconds)
+
+Open the project, then **Project Settings → General**. The region must read
+**South Asia (Mumbai)**. A project's region can't be changed afterwards. If it says
+something else, delete the project (it's empty, nothing is lost) and make a new one.
+
+### 2b. Set up the database — one paste
+
+1. Open **`supabase/setup-all.sql`** in this folder, **select all and copy**.
+2. In Supabase: **SQL Editor** (left sidebar) → **New query** → paste → **Run**.
+3. It should finish with **"Success. No rows returned"**. If it reports an error, send me
+   the exact words and don't run it again.
+
+That one file contains everything: the tables, the lock on them, the server's access, the
+two admin addresses (`anandjain0498@gmail.com` and `marwadisamajindore@gmail.com`) and the
+private `member-photos` bucket. It's generated from the numbered files, which stay the
+source of truth (`npm run sql` rebuilds it). It was tested twice over on a scratch copy of
+Postgres first. Running it again later is harmless.
+
+### 2c. What goes where — the passwords and keys
+
+| What | Where you find it | Where it goes | Give it to me? |
+|---|---|---|---|
+| **Database password** | You generated it in step 1 | Your password manager. **Nowhere else.** The app never uses it | **No. Never** |
+| **Project URL** | Project Settings → *Data API* | `.env.local`, line `NEXT_PUBLIC_SUPABASE_URL` | Not needed |
+| **Publishable key** (`sb_publishable_…`) | Project Settings → *API Keys* | `.env.local`, line `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Not needed |
+| **Secret key** (`sb_secret_…`) | *API Keys* → *Secret keys* → copy | `.env.local`, line `SUPABASE_SERVICE_ROLE_KEY` | **No. Never** |
+| **Committee code** | You choose it | `.env.local`, line `ADMIN_ACCESS_CODE` | No |
+
+The names in `.env.local` are the older ones. Supabase's dashboard says "publishable" and
+"secret", and the installed version of the app's Supabase library accepts both styles. If
+your dashboard still offers the old *anon* and *service_role* keys, those work too.
+
+**You never need to send me a key.** `.env.local` lives on this Mac, and `npm run
+check:setup` reads it and tells you PASS or FAIL without printing a single key. Run it
+yourself, or tell me "done" and I'll run it.
 
 ---
 
@@ -183,26 +214,53 @@ Both stay on your laptop: the folder's `.gitignore` stops any `.xlsx` from being
 
 ---
 
-## 5. Running it on your laptop &nbsp; *(you, five minutes, once the code is in)*
+## 5. Putting the keys in, and running it &nbsp; *(you, ten minutes)*
 
-You already have Node from PMConnect. In a terminal, inside this folder:
+`.env.local` is the app's private settings file. It's already created in this folder with
+the session secret filled in. Four lines are waiting for you. The file's name starts with
+a dot, so Finder hides it. The easiest way to open it is this command in a terminal:
 
 ```bash
-npm install
+open -e "/Users/freeze/Desktop/12_Claude_code/Jain_shwetambar_marwadi_samaj_app/.env.local"
 ```
 
-Copy `.env.local.example` to `.env.local` and fill in: the Supabase URL and anon key
-from step 2, the service_role key (typed by you, not pasted from a chat), an
-`ADMIN_ACCESS_CODE` of your choosing (the committee's emergency door — if it contains a
-`#`, put it in quotes), and a long random `SESSION_SECRET`.
+It opens in TextEdit. Paste each value straight after its `=`, **with no spaces and no
+quote marks**, like this (these are made up):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://abcdefghijklmnopqrst.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_AbCdEf…
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_GhIjKl…
+ADMIN_ACCESS_CODE=choose-something-long-and-memorable
+```
+
+- **The URL** has nothing after `.supabase.co` — no slash, no `/rest/v1`.
+- **The two keys are different.** The publishable one starts with `sb_publishable_`, the
+  secret one with `sb_secret_`. Putting them on the wrong lines is the commonest slip, and
+  the check below catches it.
+- **The committee code** opens the admin panel without Google, so make it long, something
+  like four unrelated words. If it contains a `#`, put the whole code in "double quotes",
+  or everything after the `#` is silently dropped (the check warns about this).
+- **Leave `SESSION_SECRET` and `NEXT_PUBLIC_SITE_URL` alone.**
+
+Save with **⌘S** and close TextEdit. Then, in a terminal inside this folder:
+
+```bash
+npm run check:setup
+```
+
+It prints PASS or FAIL for each thing, with what to do next, and never prints a key.
+When every line says PASS:
 
 ```bash
 npm run dev
 ```
 
-Opens at **http://localhost:3310**. Then `npm run import` builds the local copy from the
-spreadsheet, `npm run check` runs the logic tests against it, and `npm run migrate`
-pushes it up to Supabase.
+Opens at **http://localhost:3310**. Importing Book 2's families comes next.
+
+**If you ever paste a secret key into the wrong place** (a chat, an email, a screenshot),
+treat it as leaked: *API Keys → the secret key → Regenerate*, then paste the new one into
+`.env.local`. Nothing else needs to change.
 
 ---
 

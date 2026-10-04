@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start -p 3310",
     "migrate": "node --env-file=.env.local scripts/migrate-to-supabase.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sql": "node scripts/combine-sql.mjs",
+    "check:setup": "node --env-file=.env.local scripts/check-setup.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.3",

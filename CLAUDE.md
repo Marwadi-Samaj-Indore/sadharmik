@@ -141,8 +141,17 @@ Spreadsheets, `.data/` and every `.env*` except the example are in `.gitignore`,
 was written before the first commit. **Never commit member data.**
 
 SQL migrations are numbered files in `supabase/`, applied by hand in the Supabase SQL
-Editor, `schema.sql` first; it seeds `admins`. Give each one a short title when handing
-it over.
+Editor, `schema.sql` first; it seeds `admins`. A **new** project takes one paste of
+`supabase/setup-all.sql`, generated from all of them by `npm run sql` — never edit it by
+hand, and rerun the command after changing any numbered file. Give any new migration a
+short title when handing it over.
+
+`npm run check:setup` reads `.env.local` and reports PASS/FAIL on the settings, the
+server key, the grants, the public key's lockout and the photo bucket **without printing
+a key** — which is how the owner's secrets stay out of chats. Prefer it to asking for a
+value. Supabase now issues `sb_publishable_…` / `sb_secret_…` keys; the env variable names
+stayed `…ANON_KEY` / `…SERVICE_ROLE_KEY` and hold either style (supabase-js 2.110 accepts
+both).
 
 **Grants are explicit here, unlike PMConnect.** The project has "Automatically expose
 new tables" OFF (Supabase's default for projects created from 30 May 2026), so a new
