@@ -3,6 +3,8 @@ import { Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from
 import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { SectionHeading, Meter, Badge } from "@/components/ui";
+import { CelebrationCard } from "@/components/CelebrationCard";
+import { celebrations } from "@/lib/celebrations";
 import {
   completion,
   formatDateLong,
@@ -27,6 +29,11 @@ function monogram(name: string): string {
 
 export default async function HomePage() {
   const [db, session] = await Promise.all([getDb(), getSession()]);
+
+  // The committee's week ahead. Worked out only for admins: members never
+  // see it, so there is no reason to compute it on their every visit.
+  const UPCOMING_DAYS = 7;
+  const upcoming = session.isAdmin ? celebrations(db, UPCOMING_DAYS) : [];
 
   const pinned = db.announcements.find((a) => a.pinned) ?? null;
   const activeRequirements = db.requirements
@@ -151,9 +158,38 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* No birthday or anniversary wishes here, unlike PM Parivar: the samaj
-          runs to thousands of members, and a daily list of strangers'
-          birthdays is noise rather than closeness. Dates stay on profiles. */}
+      {/* Birthdays and anniversaries — for the committee only. The samaj runs
+          to thousands of members, and a daily list of strangers' birthdays is
+          noise to them; to the committee it is who to greet this week. The
+          empty state stays, so an admin knows the section exists before the
+          first dates of birth are filled in. */}
+      {session.isAdmin && (
+        <section className="mt-6">
+          <SectionHeading>Birthdays & anniversaries</SectionHeading>
+          <p className="-mt-1 px-4 pb-2 text-xs text-ink-faint">
+            Next {UPCOMING_DAYS} days · only the committee sees this
+          </p>
+          {upcoming.length > 0 ? (
+            <div className="space-y-3 px-4">
+              {upcoming.map((entry) => (
+                <CelebrationCard
+                  key={
+                    entry.kind === "birthday"
+                      ? `b-${entry.person.id}`
+                      : `a-${entry.couple.map((p) => p.id).join("-")}`
+                  }
+                  entry={entry}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="card-mist mx-4 px-4 py-5 text-center text-sm text-ink-soft">
+              None in the next {UPCOMING_DAYS} days. Dates appear here as members add
+              their date of birth and anniversary.
+            </p>
+          )}
+        </section>
+      )}
 
       {/* Latest requirements */}
       {activeRequirements.length > 0 && (

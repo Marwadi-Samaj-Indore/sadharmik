@@ -75,6 +75,9 @@ export async function updatePerson(personId: string, formData: FormData) {
   person.dob = text(formData, "dob") || null;
   person.bloodGroup = text(formData, "bloodGroup");
   person.maritalStatus = text(formData, "maritalStatus");
+  // The date field only exists on the form while "Married" is chosen
+  person.anniversary =
+    person.maritalStatus === "married" ? text(formData, "anniversary") || null : null;
   person.livingIn = text(formData, "livingIn");
   person.education = text(formData, "education");
   person.occupationType = text(formData, "occupationType") as Person["occupationType"];
@@ -132,6 +135,18 @@ export async function updatePerson(personId: string, formData: FormData) {
 
   await savePerson(person);
   for (const path of obsolete) await removeImage(path);
+
+  // The head couple's date also lives on the household, which the household
+  // page shows; keep the two in step when either of them sets it
+  const household = db.households.find((h) => h.id === person.householdId);
+  if (
+    household &&
+    person.anniversary &&
+    (person.relationship === "self" || person.relationship === "spouse") &&
+    household.anniversary !== person.anniversary
+  ) {
+    await saveHousehold({ ...household, anniversary: person.anniversary });
+  }
 
   // Any field the member has now filled in stops being an open issue
   const settled = db.issues
@@ -200,6 +215,7 @@ export async function addFamilyMember(householdId: string, formData: FormData) {
     whatsapp: null,
     email: "",
     dob: text(formData, "dob") || null,
+    anniversary: null,
     bloodGroup: "",
     maritalStatus: "",
     livingIn: "",

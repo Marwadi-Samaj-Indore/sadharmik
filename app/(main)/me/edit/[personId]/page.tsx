@@ -5,6 +5,7 @@ import { updatePerson } from "@/app/actions/data";
 import { BackBar } from "@/components/ui";
 import { PhotoPicker, VisitingCardPicker } from "@/components/PhotoPicker";
 import { SaveBar } from "@/components/SaveBar";
+import { MaritalFields } from "@/components/MaritalFields";
 import { BUSINESS_CATEGORIES, OCCUPATION_TYPES, BLOOD_GROUPS } from "@/lib/categories";
 import { resolveReturnTo, returnLabel } from "@/lib/nav";
 import { fullName, initials, photoUrl, relationshipLabel } from "@/lib/util";
@@ -190,42 +191,36 @@ export default async function EditPersonPage({
                 members below.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="bloodGroup" className="label">
-                  Blood group
-                </label>
-                <select
-                  id="bloodGroup"
-                  name="bloodGroup"
-                  defaultValue={person.bloodGroup}
-                  className="field"
-                >
-                  <option value="">Not known</option>
-                  {BLOOD_GROUPS.map((b) => (
-                    <option key={b} value={b}>
-                      {b}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="maritalStatus" className="label">
-                  Marital status
-                </label>
-                <select
-                  id="maritalStatus"
-                  name="maritalStatus"
-                  defaultValue={person.maritalStatus}
-                  className="field"
-                >
-                  <option value="">Not specified</option>
-                  <option value="single">Single</option>
-                  <option value="married">Married</option>
-                  <option value="widowed">Widowed</option>
-                </select>
-              </div>
-            </div>
+            <MaritalFields
+              maritalStatus={person.maritalStatus}
+              // The head couple's date is the household's (the household form
+              // can change it too); a married son or daughter has their own
+              anniversary={
+                person.relationship === "self" || person.relationship === "spouse"
+                  ? household?.anniversary ?? person.anniversary
+                  : person.anniversary
+              }
+              beside={
+                <div>
+                  <label htmlFor="bloodGroup" className="label">
+                    Blood group
+                  </label>
+                  <select
+                    id="bloodGroup"
+                    name="bloodGroup"
+                    defaultValue={person.bloodGroup}
+                    className="field"
+                  >
+                    <option value="">Not known</option>
+                    {BLOOD_GROUPS.map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              }
+            />
             <div>
               <label htmlFor="livingIn" className="label">
                 Currently living in

@@ -85,6 +85,7 @@ const people = db.people.map((p) => ({
   whatsapp: blank(p.whatsapp),
   email: p.email ?? "",
   dob: blank(p.dob),
+  anniversary: blank(p.anniversary),
   blood_group: p.bloodGroup ?? "",
   marital_status: p.maritalStatus ?? "",
   living_in: p.livingIn ?? "",

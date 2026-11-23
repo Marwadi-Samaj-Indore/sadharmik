@@ -107,6 +107,29 @@ export function ageFrom(iso: string | null, today = new Date()): number | null {
   return age >= 0 && age < 120 ? age : null;
 }
 
+/**
+ * Days until the next occurrence of this day-and-month. 0 means today.
+ * Year is ignored, which is what a birthday reminder actually needs.
+ */
+export function daysUntilAnnual(iso: string | null, today = new Date()): number | null {
+  const p = parts(iso);
+  if (!p) return null;
+
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  let next = new Date(today.getFullYear(), p.month - 1, p.day);
+  if (next < startOfToday) next = new Date(today.getFullYear() + 1, p.month - 1, p.day);
+
+  return Math.round((next.getTime() - startOfToday.getTime()) / 86400000);
+}
+
+/** The anniversary or birthday being reached this year: "30" for a 30th. */
+export const ordinalYears = (iso: string | null, today = new Date()) => {
+  const p = parts(iso);
+  if (!p) return null;
+  const years = today.getFullYear() - p.year;
+  return years > 0 && years < 100 ? years : null;
+};
+
 export function relativeTime(iso: string, now = new Date()) {
   const diff = now.getTime() - new Date(iso).getTime();
   const mins = Math.round(diff / 60000);
@@ -166,6 +189,24 @@ export const mapsLink = (household: Household) =>
 
 export const displayPhone = (phone: string) =>
   `${phone.slice(0, 5)} ${phone.slice(5)}`;
+
+/* ------------------------------------------------- wish message templates */
+
+// Signed from the samaj: only the committee sees these cards, and they greet
+// members on its behalf
+export function birthdayMessage(p: Person) {
+  return `Jai Jinendra ${p.firstName}! Wishing you a very happy birthday and a healthy, joyful year ahead. — Marwadi Samaj Indore`;
+}
+
+export function anniversaryMessage(names: string, dateIso: string) {
+  const years = ordinalYears(dateIso);
+  return `Jai Jinendra! Happy${years ? ` ${years}${suffix(years)}` : ""} Wedding Anniversary to ${names}. Wishing you both continued happiness together. — Marwadi Samaj Indore`;
+}
+
+const suffix = (n: number) => {
+  if (n % 100 >= 11 && n % 100 <= 13) return "th";
+  return ["th", "st", "nd", "rd"][n % 10] ?? "th";
+};
 
 /* ---------------------------------------------------------------- completion */
 

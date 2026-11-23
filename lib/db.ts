@@ -90,6 +90,7 @@ function toPerson(row: any): Person {
     whatsapp: row.whatsapp ?? null,
     email: blankToEmpty(row.email),
     dob: row.dob ?? null,
+    anniversary: row.anniversary ?? null,
     bloodGroup: blankToEmpty(row.blood_group),
     maritalStatus: blankToEmpty(row.marital_status),
     livingIn: blankToEmpty(row.living_in),
@@ -136,6 +137,7 @@ function fromPerson(p: Person) {
     whatsapp: p.whatsapp,
     email: p.email,
     dob: p.dob,
+    anniversary: p.anniversary,
     blood_group: p.bloodGroup,
     marital_status: p.maritalStatus,
     living_in: p.livingIn,
@@ -531,7 +533,14 @@ const fail = (what: string, error: { message: string } | null) => {
 };
 
 export async function savePerson(person: Person) {
-  const { error } = await getSupabase().from("people").upsert(fromPerson(person));
+  const row = fromPerson(person);
+  let { error } = await getSupabase().from("people").upsert(row);
+  // Until migration 009 has been run the column doesn't exist, and PostgREST
+  // refuses the whole row. Saving everything else beats losing the edit.
+  if (error && /anniversary/.test(error.message)) {
+    const { anniversary: _unsaved, ...rest } = row;
+    ({ error } = await getSupabase().from("people").upsert(rest));
+  }
   fail("Could not save the profile", error);
 }
 

@@ -172,7 +172,9 @@ create table if not exists admins (
 
 insert into admins (email) values
   ('anandjain0498@gmail.com'),
-  ('marwadisamajindore@gmail.com')
+  ('marwadisamajindore@gmail.com'),
+  ('globe.jeet@gmail.com'),
+  ('mahitmehtajeet@gmail.com')
   on conflict (email) do nothing;
 
 -- ------------------------------------------------------------- keep timestamps

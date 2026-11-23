@@ -37,8 +37,18 @@ the owner, who is not a developer. `README.md` is in the same register.
   The bracketed number is the book's own family number (1–225), not S.NO — the book
   gives two families (193); the repeat gets id `h193-<sno>` and an issue. IDs are
   `h<n>` and `p<n>-<i>`. The logic test suite (`check-logic.ts`) is not rewritten yet.
-- **No birthday or anniversary wishes** (owner's decision, 4 Oct 2026): Home has no
-  celebrations section; DOB and anniversary stay as profile information.
+- **Birthdays and anniversaries are for admins only** (owner's decisions, 4 Oct and
+  23 Nov 2026): members' Home has no celebrations; an admin's Home shows the next 7
+  days with Wish-on-WhatsApp buttons signed "— Marwadi Samaj Indore"
+  (`lib/celebrations.ts`). Anniversaries come from `households.anniversary` (head
+  couple) and `people.anniversary` (migration 009; a married son or daughter), the
+  latter grouped per household by date so a couple shows once. The profile form shows
+  the anniversary field only while "Married" is picked (`MaritalFields`); for the head
+  and spouse it reads and writes the household's date. `savePerson` retries without the
+  column if 009 hasn't been run.
+- **Admins:** anandjain0498, marwadisamajindore, globe.jeet, mahitmehtajeet (all
+  @gmail.com) — seeded in `schema.sql` and live in the `admins` table. An address only
+  brings admin through Google sign-in; the committee code still works without it.
 - **Not copied on purpose:** every PMConnect script that contained real members' names
   or phone numbers (screenshot, recording, verification and seed scripts). Never bring
   PM Parivar data into this repository.
@@ -86,12 +96,13 @@ import them, or types from them, into a client component (`Theme` lives in
 
 ### Auth
 
-**Google is OFF during testing** (`lib/signin.ts`, `GOOGLE_SIGN_IN = false`, owner's
-decision 4 Oct 2026): the mobile number alone signs a member in, on the sign-in page
-itself. That is weak — members' numbers are printed in the samaj's book — so turn it
-back on, after SETUP.md step 3, before the app goes beyond testers. A profile claimed by
-mobile carries the `verified-by-mobile` placeholder, which a real Google address later
-replaces. The description below is how it works with the flag on.
+**Two flags in `lib/signin.ts`.** `GOOGLE_SIGN_IN` shows the Google button — keep it
+false until the Google provider is configured in Supabase (SETUP.md step 3), or the
+button leads to an error page. `MOBILE_SIGN_IN` (true since 4 Oct 2026) lets the mobile
+number alone sign a member in, which is weak — members' numbers are printed in the
+samaj's book. With both on, the page offers Google first and the number below it. A
+profile claimed by mobile carries the `verified-by-mobile` placeholder, which a real
+Google address later replaces. The description below is the Google route.
 
 Google is the front door; a **full 10-digit mobile number** is the one-time introduction
 that records the Google address on the member's row (the spreadsheet has almost no

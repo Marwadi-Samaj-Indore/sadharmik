@@ -192,6 +192,7 @@ function newPerson(household, isHead, words, fields) {
     photo: null,
     mobile: null, whatsapp: null, email: "",
     dob,
+    anniversary: null,
     bloodGroup: "", maritalStatus: "", livingIn: "", education: "", occupationType: "",
     business: {
       name: "", category: "", description: "", keywords: "", address: "",
@@ -412,6 +413,7 @@ function readBook2(ws) {
       whatsapp: parseMobile(cell("whatsapp", row)).value,
       email: str(cell("email", row)).toLowerCase(),
       dob: parseDate(cell("dob", row)),
+      anniversary,
       bloodGroup: bloodGroup(cell("blood", row)),
       maritalStatus: marital(cell("marital", row)),
       livingIn: titleCase(str(cell("livingIn", row))),
@@ -495,7 +497,10 @@ const db = {
   version: 1,
   importedAt: new Date().toISOString(),
   source: FILE.split("/").pop(),
-  admins: ["anandjain0498@gmail.com", "marwadisamajindore@gmail.com"],
+  admins: [
+    "anandjain0498@gmail.com", "marwadisamajindore@gmail.com",
+    "globe.jeet@gmail.com", "mahitmehtajeet@gmail.com",
+  ],
   households,
   people,
   announcements: [],

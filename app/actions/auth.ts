@@ -15,7 +15,7 @@ import {
 } from "@/lib/session";
 import { checkSignInRate, recordFailedSignIn } from "@/lib/ratelimit";
 import { shortName } from "@/lib/util";
-import { GOOGLE_SIGN_IN } from "@/lib/signin";
+import { MOBILE_SIGN_IN } from "@/lib/signin";
 
 /**
  * Answering the mobile gate is itself proof of ownership, so record the
@@ -71,8 +71,8 @@ export async function verifyMobile(
     };
   }
 
-  // With Google on, the number is a second step, never a way round the first
-  if (GOOGLE_SIGN_IN && !(await googleEmail())) {
+  // When the number isn't a way in by itself, it only follows Google
+  if (!MOBILE_SIGN_IN && !(await googleEmail())) {
     return { error: "Please continue with Google first." };
   }
 

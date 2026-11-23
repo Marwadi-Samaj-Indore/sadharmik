@@ -51,6 +51,9 @@ export interface Person {
   whatsapp: string | null;
   email: string;
   dob: string | null;
+  /** Wedding anniversary (yyyy-mm-dd). For the head and spouse it mirrors
+   *  Household.anniversary; for a married son or daughter it is theirs alone. */
+  anniversary: string | null;
   bloodGroup: string;
   maritalStatus: string;
   livingIn: string;

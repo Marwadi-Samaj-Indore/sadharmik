@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
+import { Heart,
   Phone,
   MessageCircle,
   Mail,
@@ -203,6 +203,17 @@ export default async function PersonPage({
             }
             icon={<Cake size={ICON.sm} />}
           />
+          {/* Only for a married son or daughter: the head couple's date is
+              already on the family's page */}
+          {person.anniversary &&
+            person.relationship !== "self" &&
+            person.relationship !== "spouse" && (
+              <DetailRow
+                label="Wedding anniversary"
+                value={formatDateLong(person.anniversary)}
+                icon={<Heart size={ICON.sm} />}
+              />
+            )}
           <DetailRow
             label="Blood group"
             value={
