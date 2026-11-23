@@ -17,4 +17,4 @@
  * At least one of the two must be on.
  */
 export const GOOGLE_SIGN_IN = true;
-export const MOBILE_SIGN_IN = true;
+export const MOBILE_SIGN_IN = false;

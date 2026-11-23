@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
-import { getDb } from "@/lib/db";
+import { getDb, savePerson } from "@/lib/db";
 import { grantGoogleEmail, setSession } from "@/lib/session";
 
 /**
@@ -66,9 +66,27 @@ export async function GET(request: Request) {
   await supabase.auth.signOut();
 
   const db = await getDb();
-  const person = db.people.find(
+  let person = db.people.find(
     (p) => p.claimedByEmail && p.claimedByEmail.toLowerCase() === email
   );
+
+  // The paper form asks for an email, and the committee types it into the
+  // sheet. Where exactly one unclaimed member carries this address, the form
+  // has already introduced them: link it now and skip the mobile step. A
+  // family address shared by several members proves nothing about which one
+  // is holding the phone, so those still answer the mobile question.
+  if (!person) {
+    const unclaimed = db.people.filter(
+      (p) =>
+        !p.deceased &&
+        p.email.toLowerCase() === email &&
+        (!p.claimedByEmail || p.claimedByEmail === "verified-by-mobile")
+    );
+    if (unclaimed.length === 1) {
+      person = { ...unclaimed[0], claimedByEmail: email };
+      await savePerson(person);
+    }
+  }
   const isAdmin = db.admins.includes(email);
 
   if (person || isAdmin) {

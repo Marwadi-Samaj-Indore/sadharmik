@@ -99,9 +99,12 @@ import them, or types from them, into a client component (`Theme` lives in
 **Two flags in `lib/signin.ts`.** `GOOGLE_SIGN_IN` shows the Google button — on since
 23 Nov 2026, when the Google provider was configured in Supabase (Google Cloud project
 "Marwadi Samaj Indore", owned by marwadisamajindore@gmail.com; public /privacy and
-/terms exist for its branding page). `MOBILE_SIGN_IN` (true since 4 Oct 2026) lets the mobile
-number alone sign a member in, which is weak — members' numbers are printed in the
-samaj's book. With both on, the page offers Google first and the number below it. A
+/terms exist for its branding page). `MOBILE_SIGN_IN` is **off** since 23 Nov 2026 (the pilot):
+Google is the only way in, and the mobile number is the one-time introduction after it.
+Turned on, it lets the number alone sign a member in — weak, since members' numbers are
+printed in the samaj's book. A Google address that matches exactly one unclaimed
+member's `email` (typed from the paper form) is claimed in the callback and skips the
+mobile step. A
 profile claimed by mobile carries the `verified-by-mobile` placeholder, which a real
 Google address later replaces. The description below is the Google route.
 
