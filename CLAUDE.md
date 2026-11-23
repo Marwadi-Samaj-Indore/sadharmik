@@ -133,23 +133,29 @@ address in the `admins` table also grants admin.
 
 ## Design
 
-**Kesar on cream.** Tokens are in `@theme` in `app/globals.css`; use the semantic names
-(`bg-surface`, `text-ink-soft`, `btn btn-primary`), never raw Tailwind colours.
+**Clay, sun and leaf on peach-cream, deep teal ink** (redesign of 23 Nov 2026, from
+the owner's reference; it replaced the saturated saffron "kesar" palette, and the
+`kesar-*` token names with it). Tokens are in `@theme` in `app/globals.css`; use the
+semantic names (`bg-surface`, `text-ink-soft`, `btn btn-primary`), never raw colours.
+`docs/palette-sample.html` shows the OLD palette and is kept only as history.
 
-The one rule, from measurement (`docs/palette-sample.html` shows every pairing):
-`kesar` #FF6331 is 2.97:1 against white, so it is a **plate, accent or mark, never a
-label**. White text sits on `kesar-deep` (#D73400, 4.8:1). Saffron **words** use
-`kesar-text` (#C32F00) or `kesar-ink` (#A12700) — `kesar-deep` itself drops to 3.97:1 on a
-`kesar-pale` card, so it never sets text. In dark mode the actions invert to a light
-plate with dark text, as in PMConnect.
+Each accent has one job, which is what keeps three colours from competing:
 
-| Token | Took over from PMConnect | Job |
+| Family | Tokens | Job |
 |---|---|---|
-| `kesar` | `sage-deep` | accent fills: the profile-completion bars, the WhatsApp-button ring. Not focus rings — those need 3:1, so they use `kesar-deep` |
-| `kesar-pale`, `kesar-mist` | `sage-pale`, `sage-mist` | soft cards, chips, selected rows |
-| `kesar-deep` | `olive` (as a background) | primary buttons, focus rings, active chips |
-| `kesar-text` | `olive` (as text) | links and saffron words |
-| `kesar-ink` | `olive-deep` | pressed states, small emphasis |
+| clay (terracotta) | `clay-pale`, `clay-soft`, `clay`, `clay-deep`, `clay-text`, `clay-ink` | actions and the app's voice: primary buttons (`clay-deep` plate), links (`clay-text`), the featured card, the active tab |
+| sun (mustard) | `sun-pale`, `sun`, `sun-ink` | things to notice: upcoming dates, warn badges, the unread dot, empty-state icons |
+| leaf (forest) | `leaf-pale`, `leaf`, `leaf-ink` | positive and "how much": meters, the on switch, the saved toast, info/success badges |
+| ink (deep teal) | `ink`, `ink-soft`, `ink-faint` | text; and the SELECTED state of chips and toggles (`chip-active` is ink, not clay) |
+| ground | `cream`, `cream-deep`, `surface` (warm off-white, never #fff), `sand` (neutral tint) | page, cards, fields and pressed rows |
+
+Rules that came from measurement: every text token clears 4.5:1 on every surface it is
+used on; `clay` and `sun` are plates and marks, never labels (clay is 3.2:1 on cream).
+Labels on a clay or leaf plate use `text-surface`, and `chip-active` uses `cream`, so
+they flip with the theme without a dark-mode rule. Surfaces are nearly flat: tone and a
+hairline separate them, shadow is for things that float. Chips and ghost buttons are
+outlined pills. Monogram avatars and the admin stat tiles rotate the three pale tints.
+Dark mode is a teal-charcoal ground with the same three accents lightened.
 
 The logo is the samaj's own (`logo/`), supplied as a JPEG with no vector original;
 `logo/samaj-logo-cutout*.png` is the transparent cut-out every public image is
