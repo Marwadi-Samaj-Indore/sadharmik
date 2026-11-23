@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ChevronRight, FileText } from "lucide-react";
 import { getDb } from "@/lib/db";
-import { Avatar } from "@/components/Avatar";
-import { BackBar, Badge, EmptyState } from "@/components/ui";
-import { ageFrom, shortName } from "@/lib/util";
+import { getSession } from "@/lib/session";
+import { BackBar } from "@/components/ui";
+import { MatrimonyBrowser, type MatchRow } from "@/components/MatrimonyBrowser";
+import { ageFrom, initials, shortName } from "@/lib/util";
 import { ICON } from "@/lib/icons";
 import type { Person } from "@/lib/types";
 
@@ -70,11 +71,14 @@ export default async function MatrimonyPage({
     );
   }
 
-  const db = await getDb();
+  const [db, session] = await Promise.all([getDb(), getSession()]);
   const householdById = new Map(db.households.map((h) => [h.id, h]));
   const ageOf = (p: Person) => ageFrom(p.dob) ?? p.age;
+  const myGotra = session.person
+    ? householdById.get(session.person.householdId)?.gotra ?? ""
+    : "";
 
-  const matches = db.people
+  const rows: MatchRow[] = db.people
     .filter(
       (p) =>
         !p.deceased &&
@@ -82,58 +86,33 @@ export default async function MatrimonyPage({
         p.gender === choice.gender &&
         (ageOf(p) ?? 0) >= choice.minAge
     )
-    .sort((a, b) => (ageOf(a) ?? 0) - (ageOf(b) ?? 0));
+    .sort((a, b) => (ageOf(a) ?? 0) - (ageOf(b) ?? 0))
+    .map((p) => {
+      const household = householdById.get(p.householdId);
+      return {
+        id: p.id,
+        name: shortName(p),
+        avatarLabel: initials(p),
+        photo: p.privacy.hidePhoto ? null : p.photo,
+        age: ageOf(p) ?? 0,
+        education: p.education,
+        occupation: p.occupationType,
+        area: household?.area ?? "",
+        gotra: household?.gotra ?? "",
+        nativePlace: household?.nativePlace ?? "",
+        livingIn: p.livingIn,
+        bloodGroup: p.bloodGroup,
+        extra: [p.business.name, p.business.category].filter(Boolean).join(" "),
+      };
+    });
 
   return (
     <>
       <BackBar label={choice.title} href="/matrimony" />
-      <div className="px-4 pt-5">
+      <div className="px-4 pb-3 pt-5">
         <h1 className="text-title">{choice.title}</h1>
-        <p className="mt-1 text-sm text-ink-soft">
-          <span className="tnum">{matches.length}</span> unmarried {choice.noun} in the
-          directory, youngest first
-        </p>
       </div>
-
-      {matches.length === 0 ? (
-        <div className="mt-5">
-          <EmptyState
-            title="Nobody listed yet"
-            body="Members appear here once their profile says Single, with a gender and an age or date of birth."
-          />
-        </div>
-      ) : (
-        <ul className="mx-4 mt-4 space-y-2">
-          {matches.map((p) => {
-            const household = householdById.get(p.householdId);
-            const age = ageOf(p);
-            return (
-              <li key={p.id}>
-                <Link href={`/person/${p.id}`} className="card card-tap flex items-center gap-3 p-3">
-                  <Avatar person={p} size="row" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-serif text-base font-semibold">
-                      {shortName(p)}
-                    </p>
-                    <p className="truncate text-xs text-ink-soft">
-                      {[age !== null ? `${age} yrs` : null, p.education, household?.area || household?.city]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
-                    {/* Gotra matters here: families avoid a match in their own */}
-                    {household?.gotra && (
-                      <span className="mt-1 inline-block">
-                        <Badge tone="warn">{household.gotra}</Badge>
-                      </span>
-                    )}
-                  </div>
-                  <ChevronRight size={ICON.md} className="shrink-0 text-ink-faint" />
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <MatrimonyBrowser rows={rows} noun={choice.noun} minAge={choice.minAge} myGotra={myGotra} />
       <div className="h-6" />
     </>
   );
