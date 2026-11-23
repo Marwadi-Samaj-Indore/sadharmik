@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Viewport } from "next";
 import { redirect } from "next/navigation";
 import { AlertCircle, Lock, Users } from "lucide-react";
@@ -124,7 +125,11 @@ export default async function LoginPage({
           the same promise the Me tab makes, made earlier. */}
       <p className="mx-auto mb-9 mt-7 max-w-[12.5rem] text-center text-xs leading-relaxed text-ink-faint">
         <Lock size={ICON.xs} className="mr-1.5 inline-block -translate-y-px" />
-        Private to samaj members. Nothing here is public.
+        Private to samaj members. Nothing here is public.{" "}
+        {/* Google requires the sign-in page to link the policy */}
+        <Link href="/privacy" className="underline underline-offset-2">
+          Privacy
+        </Link>
       </p>
 
       {/* Five people on a committee of 452 need this; everyone else needs it
