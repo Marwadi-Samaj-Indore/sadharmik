@@ -35,10 +35,15 @@ import {
 
 export default async function PersonPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
-  const { id } = await params;
+  const [{ id }, { from }] = await Promise.all([params, searchParams]);
+  // Opened from the matrimony list: Back returns to that list (by history,
+  // so its filters survive), not to the person's family page
+  const fromMatrimony = from === "matrimony-boy" || from === "matrimony-girl";
   const [db, session] = await Promise.all([getDb(), getSession()]);
 
   const person = db.people.find((p) => p.id === id);
@@ -63,10 +68,18 @@ export default async function PersonPage({
 
   return (
     <>
-      <BackBar
-        label={household?.surname || "Member"}
-        href={household ? `/household/${household.id}` : "/directory"}
-      />
+      {fromMatrimony ? (
+        <BackBar
+          label="Matrimony"
+          href={`/matrimony?for=${from === "matrimony-boy" ? "boy" : "girl"}`}
+          historyBack
+        />
+      ) : (
+        <BackBar
+          label={household?.surname || "Member"}
+          href={household ? `/household/${household.id}` : "/directory"}
+        />
+      )}
 
       {/* Identity. Each fact gets its own line — running the relationship and
           the household name together made a two-line centred phrase that broke

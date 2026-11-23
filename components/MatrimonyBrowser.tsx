@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight, Search, SlidersHorizontal, X } from "lucide-react";
 import { AvatarLite } from "./Avatar";
 import { Badge, EmptyState } from "./ui";
@@ -44,11 +44,14 @@ export function MatrimonyBrowser({
   noun,
   minAge,
   myGotra,
+  from,
 }: {
   rows: MatchRow[];
   noun: string;
   minAge: number;
   myGotra: string;
+  /** Tells the profile page where Back should return to */
+  from: "matrimony-boy" | "matrimony-girl";
 }) {
   const ages = rows.map((r) => r.age);
   const lowest = Math.min(minAge, ...ages);
@@ -65,6 +68,47 @@ export function MatrimonyBrowser({
   const [area, setArea] = useState("");
   const [occupation, setOccupation] = useState("");
   const [blood, setBlood] = useState("");
+
+  // Opening a profile and coming Back redraws this list, so the filters are
+  // kept for the session (per boy/girl list) and put back on return. The save
+  // skips the render the restore happens in: that render still holds the blank
+  // defaults, and saving them would wipe what is about to be put back.
+  const storageKey = `matrimony-filters:${from}`;
+  const skipSave = useRef(true);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? "null");
+      if (saved) {
+        setQuery(saved.query ?? "");
+        setShowFilters(Boolean(saved.showFilters));
+        setAgeFrom(Math.max(lowest, Math.min(highest, saved.ageFrom ?? lowest)));
+        setAgeTo(Math.max(lowest, Math.min(highest, saved.ageTo ?? highest)));
+        setExcludeMyGotra(Boolean(saved.excludeMyGotra));
+        setGotra(saved.gotra ?? "");
+        setLiving(saved.living ?? "");
+        setNative(saved.native ?? "");
+        setArea(saved.area ?? "");
+        setOccupation(saved.occupation ?? "");
+        setBlood(saved.blood ?? "");
+      }
+    } catch {
+      // Private browsing can refuse storage; the list simply starts fresh
+    }
+    skipSave.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey]);
+  useEffect(() => {
+    if (skipSave.current) {
+      skipSave.current = false;
+      return;
+    }
+    try {
+      sessionStorage.setItem(
+        storageKey,
+        JSON.stringify({ query, showFilters, ageFrom, ageTo, excludeMyGotra, gotra, living, native, area, occupation, blood })
+      );
+    } catch {}
+  }, [storageKey, query, showFilters, ageFrom, ageTo, excludeMyGotra, gotra, living, native, area, occupation, blood]);
 
   const options = useMemo(
     () => ({
@@ -320,7 +364,7 @@ export function MatrimonyBrowser({
         <ul className="mx-4 mt-3 space-y-2">
           {visible.map((r) => (
             <li key={r.id}>
-              <Link href={`/person/${r.id}`} className="card card-tap flex items-center gap-3 p-3">
+              <Link href={`/person/${r.id}?from=${from}`} className="card card-tap flex items-center gap-3 p-3">
                 <AvatarLite label={r.avatarLabel} photo={r.photo} size="row" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-serif text-base font-semibold">{r.name}</p>

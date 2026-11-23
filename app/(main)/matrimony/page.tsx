@@ -112,7 +112,9 @@ export default async function MatrimonyPage({
       <div className="px-4 pb-3 pt-5">
         <h1 className="text-title">{choice.title}</h1>
       </div>
-      <MatrimonyBrowser rows={rows} noun={choice.noun} minAge={choice.minAge} myGotra={myGotra} />
+      <MatrimonyBrowser rows={rows} noun={choice.noun} minAge={choice.minAge} myGotra={myGotra}
+        from={lookingFor === "boy" ? "matrimony-boy" : "matrimony-girl"}
+      />
       <div className="h-6" />
     </>
   );

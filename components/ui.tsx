@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import type { ReactNode } from "react";
 import { ICON } from "@/lib/icons";
+import { HistoryBackLink } from "./HistoryBackLink";
 
 /** Big display title used at the top of each tab, as in the reference screens. */
 export function PageTitle({
@@ -27,16 +28,30 @@ export function PageTitle({
 }
 
 /** Back bar for detail screens. */
-export function BackBar({ label, href }: { label: string; href: string }) {
+export function BackBar({
+  label,
+  href,
+  historyBack = false,
+}: {
+  label: string;
+  href: string;
+  /** Step back through history instead, keeping the previous screen's state */
+  historyBack?: boolean;
+}) {
+  const className =
+    "flex h-11 w-11 items-center justify-center rounded-chip transition-[background-color,transform] duration-150 hover:bg-sand active:scale-90 active:bg-clay-pale";
+  const icon = <ChevronLeft size={ICON.xl} className="text-ink" />;
   return (
     <div className="bar-blur sticky top-0 z-30 flex items-center gap-1 border-b border-line-soft px-2 py-2">
-      <Link
-        href={href}
-        aria-label="Go back"
-        className="flex h-11 w-11 items-center justify-center rounded-chip transition-[background-color,transform] duration-150 hover:bg-sand active:scale-90 active:bg-clay-pale"
-      >
-        <ChevronLeft size={ICON.xl} className="text-ink" />
-      </Link>
+      {historyBack ? (
+        <HistoryBackLink href={href} className={className}>
+          {icon}
+        </HistoryBackLink>
+      ) : (
+        <Link href={href} aria-label="Go back" className={className}>
+          {icon}
+        </Link>
+      )}
       <span className="truncate font-display text-base font-semibold tracking-[-0.012em]">
         {label}
       </span>
