@@ -79,8 +79,8 @@ export const viewport: Viewport = {
   // Zoom deliberately left enabled
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fdf8f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#16110e" },
+    { media: "(prefers-color-scheme: light)", color: "#f6ece2" },
+    { media: "(prefers-color-scheme: dark)", color: "#121c1f" },
   ],
   viewportFit: "cover",
 };

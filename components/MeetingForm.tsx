@@ -140,7 +140,7 @@ export function MeetingForm({
                     type="button"
                     onClick={() => setOrganisers(organisers.filter((_, idx) => idx !== i))}
                     aria-label="Remove this organiser"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-chip border border-line text-ink-faint active:bg-kesar-mist"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-chip border border-line text-ink-faint active:bg-sand"
                   >
                     <X size={ICON.sm} />
                   </button>
@@ -151,7 +151,7 @@ export function MeetingForm({
           <button
             type="button"
             onClick={() => setOrganisers([...organisers, ""])}
-            className="mt-2 inline-flex items-center gap-1.5 py-1 text-sm font-semibold text-kesar-text"
+            className="mt-2 inline-flex items-center gap-1.5 py-1 text-sm font-semibold text-clay-text"
           >
             <Plus size={ICON.xs} />
             Add another organiser

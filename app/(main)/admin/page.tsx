@@ -91,21 +91,25 @@ export default async function AdminPage() {
             icon={<Users size={ICON.md} />}
             value={`${claimed}/${db.people.length}`}
             label="Profiles claimed"
+            tone="leaf"
           />
           <Stat
             icon={<Briefcase size={ICON.md} />}
             value={`${listedBusinesses}`}
             label="Businesses listed"
+            tone="clay"
           />
           <Stat
             icon={<Cake size={ICON.md} />}
             value={`${withPhoto}`}
             label="Photos uploaded"
+            tone="sand"
           />
           <Stat
             icon={<AlertTriangle size={ICON.md} />}
             value={`${open.length}`}
             label="Need attention"
+            tone="sun"
           />
         </div>
       </div>
@@ -210,11 +214,11 @@ export default async function AdminPage() {
                 </Link>
                 <div className="mt-1 flex items-center gap-2">
                   <span
-                    className="h-1 w-16 shrink-0 overflow-hidden rounded-full bg-kesar-mist"
+                    className="h-1 w-16 shrink-0 overflow-hidden rounded-full bg-sand"
                     aria-hidden="true"
                   >
                     <span
-                      className="block h-full rounded-full bg-kesar"
+                      className="block h-full rounded-full bg-leaf"
                       style={{ width: `${score}%` }}
                     />
                   </span>
@@ -232,7 +236,7 @@ export default async function AdminPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Send WhatsApp reminder to ${person.firstName}`}
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-kesar-pale text-kesar-ink"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-clay-pale text-clay-ink"
                 >
                   <MessageCircle size={ICON.sm} />
                 </a>
@@ -280,8 +284,8 @@ export default async function AdminPage() {
           href="/admin/committee"
           className="card card-tap flex items-center gap-3.5 p-3.5"
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-kesar-pale">
-            <Star size={ICON.md} className="text-kesar-ink" />
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-clay-pale">
+            <Star size={ICON.md} className="text-clay-ink" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-semibold">Committee section</span>
@@ -300,8 +304,8 @@ export default async function AdminPage() {
             href="/api/export"
             className="card card-tap flex items-center gap-3.5 p-3.5"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-kesar-pale">
-              <Download size={ICON.md} className="text-kesar-ink" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-clay-pale">
+              <Download size={ICON.md} className="text-clay-ink" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-semibold">
@@ -334,20 +338,32 @@ export default async function AdminPage() {
   );
 }
 
+// Each tile takes the accent that matches what it counts: leaf for progress,
+// clay for the members' own activity, sun for what needs a look
+const STAT_TONES = {
+  leaf: { plate: "bg-leaf-pale", ink: "text-leaf-ink" },
+  clay: { plate: "bg-clay-pale", ink: "text-clay-ink" },
+  sun: { plate: "bg-sun-pale", ink: "text-sun-ink" },
+  sand: { plate: "bg-sand", ink: "text-ink-soft" },
+} as const;
+
 function Stat({
   icon,
   value,
   label,
+  tone,
 }: {
   icon: React.ReactNode;
   value: string;
   label: string;
+  tone: keyof typeof STAT_TONES;
 }) {
+  const t = STAT_TONES[tone];
   return (
-    <div className="card-fill p-3.5">
-      <span className="text-kesar-ink">{icon}</span>
-      <p className="tnum mt-1.5 font-display text-xl font-bold leading-none">{value}</p>
-      <p className="mt-1 text-2xs font-medium text-kesar-ink/75">{label}</p>
+    <div className={`rounded-card p-3.5 ${t.plate}`}>
+      <span className={t.ink}>{icon}</span>
+      <p className="tnum mt-1.5 font-display text-xl font-semibold leading-none">{value}</p>
+      <p className={`mt-1 text-2xs font-medium ${t.ink}`}>{label}</p>
     </div>
   );
 }

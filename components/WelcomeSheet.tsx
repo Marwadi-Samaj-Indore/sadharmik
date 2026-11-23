@@ -120,7 +120,7 @@ export function WelcomeSheet() {
                 onClick={() => setOpen(false)}
                 className="card-tap -mx-2 flex items-center gap-3.5 rounded-inner px-2 py-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] bg-kesar-mist text-kesar-text">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.8rem] bg-sand text-clay-text">
                   <row.icon size={ICON.md} />
                 </span>
                 <span className="min-w-0 flex-1">

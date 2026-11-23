@@ -469,7 +469,7 @@ export default async function FeedPage({
           aria-label={
             active === "announcements" ? "Post an announcement" : "Post a requirement"
           }
-          className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-kesar-deep text-white shadow-lg transition-transform active:scale-95"
+          className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-clay-deep text-surface shadow-lg transition-transform active:scale-95"
           style={{ marginBottom: "env(safe-area-inset-bottom)" }}
         >
           <Plus size={ICON.xl} />
@@ -520,7 +520,7 @@ function MeetingCard({
         <span className="block p-3.5">
           <span
             className={`flex items-center gap-1.5 text-xs font-semibold ${
-              past ? "text-ink-faint" : "text-birthday"
+              past ? "text-ink-faint" : "text-sun-ink"
             }`}
           >
             <CalendarDays size={ICON.xs} className="shrink-0" />
@@ -537,7 +537,7 @@ function MeetingCard({
             </span>
           )}
           {(past && meeting.kwikPicUrl) || (!past && attendeeTotal > 0) ? (
-            <span className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-kesar-text">
+            <span className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-clay-text">
               {past ? (
                 <>
                   <Camera size={ICON.xs} />

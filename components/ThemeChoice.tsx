@@ -59,7 +59,7 @@ export function ThemeChoice({ current }: { current: Theme }) {
               onClick={() => choose(value)}
               className={`flex min-h-[4.25rem] flex-col items-center justify-center gap-1.5 rounded-inner border transition-all duration-200 active:scale-[0.97] ${
                 active
-                  ? "border-kesar-deep bg-kesar-pale text-kesar-ink"
+                  ? "border-clay-deep bg-clay-pale text-clay-ink"
                   : "border-line bg-surface text-ink-soft"
               }`}
             >

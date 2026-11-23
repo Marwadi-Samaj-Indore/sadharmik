@@ -34,4 +34,4 @@ export async function setThemeCookie(theme: Theme) {
 
 /** Colour of the browser/status bar chrome, matched to the chosen theme. */
 export const themeColor = (theme: Theme) =>
-  theme === "dark" ? "#16110e" : "#fdf8f1";
+  theme === "dark" ? "#121c1f" : "#f6ece2";

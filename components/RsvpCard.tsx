@@ -105,7 +105,7 @@ export function RsvpCard({
                   onClick={() => change(Math.max(1, count - 1))}
                   disabled={count <= 1}
                   aria-label="One fewer person"
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-kesar-ink transition-transform active:scale-90 disabled:opacity-30"
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-clay-ink transition-transform active:scale-90 disabled:opacity-30"
                 >
                   <Minus size={ICON.md} />
                 </button>
@@ -122,7 +122,7 @@ export function RsvpCard({
                   onClick={() => change(Math.min(MAX_COUNT, count + 1))}
                   disabled={count >= MAX_COUNT}
                   aria-label="One more person"
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-kesar-ink transition-transform active:scale-90 disabled:opacity-30"
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-clay-ink transition-transform active:scale-90 disabled:opacity-30"
                 >
                   <Plus size={ICON.md} />
                 </button>

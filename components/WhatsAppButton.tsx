@@ -48,7 +48,7 @@ export function WhatsAppButton({
         <span
           key={ripple}
           aria-hidden="true"
-          className="wish-ring pointer-events-none absolute inset-0 rounded-full border-2 border-kesar"
+          className="wish-ring pointer-events-none absolute inset-0 rounded-full border-2 border-clay"
         />
       )}
       <a
@@ -57,7 +57,7 @@ export function WhatsAppButton({
         rel="noopener noreferrer"
         aria-label={label}
         onClick={() => setRipple((n) => n + 1)}
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-kesar-deep text-white shadow-[var(--shadow-raised)] transition-transform duration-200 ease-[var(--ease-spring)] active:scale-90"
+        className="flex h-11 w-11 items-center justify-center rounded-full bg-clay-deep text-surface shadow-[var(--shadow-raised)] transition-transform duration-200 ease-[var(--ease-spring)] active:scale-90"
       >
         <WhatsAppGlyph />
       </a>

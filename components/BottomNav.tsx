@@ -66,7 +66,7 @@ export function BottomNav({ feedBadge = 0 }: { feedBadge?: number }) {
         {activeIndex >= 0 && (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-2 h-9 rounded-chip bg-kesar-pale transition-transform duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)]"
+            className="pointer-events-none absolute top-2 h-9 rounded-chip bg-clay-pale transition-transform duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)]"
             style={{
               width: `calc((100% - 1rem) / ${TABS.length})`,
               left: "0.5rem",
@@ -96,19 +96,19 @@ export function BottomNav({ feedBadge = 0 }: { feedBadge?: number }) {
                       strokeWidth={active ? 2.4 : 1.9}
                       className={`transition-all duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)] ${
                         active
-                          ? "-translate-y-px scale-105 text-kesar-ink"
+                          ? "-translate-y-px scale-105 text-clay-ink"
                           : "text-ink-soft"
                       }`}
                     />
                     {showBadge && (
-                      <span className="absolute right-1 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-birthday px-1 text-[0.625rem] font-bold tabular-nums text-on-birthday shadow-[var(--shadow-rest)]">
+                      <span className="absolute right-1 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-sun px-1 text-[0.625rem] font-bold tabular-nums text-[#15313b] shadow-[var(--shadow-rest)]">
                         {feedBadge > 9 ? "9+" : feedBadge}
                       </span>
                     )}
                   </span>
                   <span
                     className={`text-2xs leading-none transition-colors duration-200 ${
-                      active ? "font-semibold text-kesar-ink" : "text-ink-soft"
+                      active ? "font-semibold text-clay-ink" : "text-ink-soft"
                     }`}
                   >
                     {tab.label}

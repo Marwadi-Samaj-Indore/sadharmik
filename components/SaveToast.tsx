@@ -64,7 +64,7 @@ export function SaveToast() {
       style={{ bottom: "calc(6.5rem + env(safe-area-inset-bottom))" }}
     >
       <div
-        className={`flex items-center gap-2 rounded-chip bg-kesar-deep px-4 py-2.5 text-base font-semibold text-white shadow-[var(--shadow-float)] transition-all duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)] ${
+        className={`flex items-center gap-2 rounded-chip bg-leaf px-4 py-2.5 text-base font-semibold text-surface shadow-[var(--shadow-float)] transition-all duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)] ${
           visible
             ? "translate-y-0 scale-100 opacity-100"
             : "pointer-events-none translate-y-3 scale-95 opacity-0"

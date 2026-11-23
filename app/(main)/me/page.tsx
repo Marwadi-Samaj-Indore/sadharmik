@@ -83,7 +83,7 @@ export default async function MePage() {
               </div>
 
               {missing.length > 0 && (
-                <div className="mt-3 rounded-inner bg-kesar-mist px-3 py-2.5">
+                <div className="mt-3 rounded-inner bg-sand px-3 py-2.5">
                   <p className="text-xs font-semibold text-ink-soft">Still missing</p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {missing.slice(0, 6).map((field) => (
@@ -114,8 +114,8 @@ export default async function MePage() {
                     href={`/me/household/${household.id}?from=me`}
                     className="card card-tap mb-2 flex items-center gap-3.5 p-3.5"
                   >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-kesar-pale">
-                      <Home size={ICON.md} className="text-kesar-ink" />
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-clay-pale">
+                      <Home size={ICON.md} className="text-clay-ink" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-semibold">
@@ -273,13 +273,13 @@ export default async function MePage() {
           <div className="mx-4">
             <Link href="/admin" className="card-fill card-tap flex items-center gap-3 p-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-surface/70">
-                <Shield size={ICON.md} className="text-kesar-ink" />
+                <Shield size={ICON.md} className="text-clay-ink" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-sm font-bold">
                   Admin panel
                 </span>
-                <span className="block text-xs text-kesar-ink/80">
+                <span className="block text-xs text-clay-ink/80">
                   {db.issues.filter((i) => !i.resolved).length} items need attention
                 </span>
               </span>

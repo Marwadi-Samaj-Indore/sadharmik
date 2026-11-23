@@ -24,8 +24,8 @@ export default function ErrorScreen({
 
   return (
     <main className="mx-auto flex min-h-[70dvh] max-w-md flex-col items-center justify-center px-6 text-center">
-      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-kesar-pale">
-        <WifiOff size={ICON.xxl} className="text-kesar-ink" />
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-clay-pale">
+        <WifiOff size={ICON.xxl} className="text-clay-ink" />
       </span>
 
       <h1 className="mt-5 text-title">This didn&apos;t load</h1>

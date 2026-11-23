@@ -92,7 +92,7 @@ export default async function HouseholdPage({
         <div className="mt-5 px-4">
           <div className="card-fill flex items-center gap-3.5 p-3.5">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface/70">
-              <Heart size={ICON.md} className="text-birthday" />
+              <Heart size={ICON.md} className="text-sun-ink" />
             </span>
             <div>
               <p className="font-display text-sm font-bold">Wedding anniversary</p>

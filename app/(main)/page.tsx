@@ -115,17 +115,17 @@ export default async function HomePage() {
         ) : (
           <section className="mt-4 px-4">
             <Link href={`/feed/${pinned.id}`} className="card-fill card-tap block p-4">
-              <div className="mb-1.5 flex items-center gap-1.5 text-2xs font-semibold text-kesar-text">
+              <div className="mb-1.5 flex items-center gap-1.5 text-2xs font-semibold text-clay-text">
                 <Pin size={ICON.micro} />
                 PINNED ANNOUNCEMENT
               </div>
               {/* h2, not h3 — this is the first heading after the page title, so
                   an h3 skipped a level for screen-reader navigation */}
               <h2 className="font-display text-base font-bold">{pinned.title}</h2>
-              <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-kesar-ink/85">
+              <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-clay-ink/85">
                 {pinned.body}
               </p>
-              <p className="mt-2 text-xs text-kesar-ink/70">
+              <p className="mt-2 text-xs text-clay-ink/70">
                 {pinned.authorName} · {relativeTime(pinned.createdAt)}
               </p>
             </Link>
@@ -139,7 +139,7 @@ export default async function HomePage() {
             href={`/feed/meetings/${nextMeeting.id}`}
             className="card card-tap block p-4"
           >
-            <div className="mb-1.5 flex items-center gap-1.5 text-2xs font-semibold text-kesar-text">
+            <div className="mb-1.5 flex items-center gap-1.5 text-2xs font-semibold text-leaf-ink">
               <CalendarDays size={ICON.micro} />
               NEXT MEETING
             </div>
@@ -198,7 +198,7 @@ export default async function HomePage() {
             action={
               <Link
                 href="/feed"
-                className="-my-3 -mr-2 px-2 py-3 text-xs font-semibold text-kesar-text"
+                className="-my-3 -mr-2 px-2 py-3 text-xs font-semibold text-clay-text"
               >
                 See all
               </Link>
@@ -241,7 +241,7 @@ export default async function HomePage() {
               ) : (
                 <div
                   aria-hidden="true"
-                  className="flex aspect-video w-full items-center justify-center bg-kesar-pale font-serif text-4xl font-semibold text-kesar-ink"
+                  className="flex aspect-video w-full items-center justify-center bg-clay-pale font-serif text-4xl font-semibold text-clay-ink"
                 >
                   {monogram(committeeHead.name)}
                 </div>
@@ -251,7 +251,7 @@ export default async function HomePage() {
                   {committeeHead.name}
                 </p>
                 {committeeHead.role && (
-                  <p className="text-xs font-semibold text-kesar-ink/80">
+                  <p className="text-xs font-semibold text-clay-ink/80">
                     {committeeHead.role}
                   </p>
                 )}
@@ -274,7 +274,7 @@ export default async function HomePage() {
                       ) : (
                         <div
                           aria-hidden="true"
-                          className="flex aspect-square w-full items-center justify-center bg-kesar-pale font-serif text-2xl font-semibold text-kesar-ink"
+                          className="flex aspect-square w-full items-center justify-center bg-clay-pale font-serif text-2xl font-semibold text-clay-ink"
                         >
                           {monogram(m.name)}
                         </div>

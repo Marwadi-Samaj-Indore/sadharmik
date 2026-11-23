@@ -14,7 +14,7 @@ import { GOOGLE_SIGN_IN, MOBILE_SIGN_IN } from "@/lib/signin";
  * The page is cream whatever the phone is set to, so the browser chrome has to
  * be told the same thing — otherwise a dark status bar sits on a cream page.
  */
-export const viewport: Viewport = { themeColor: "#fdf8f1" };
+export const viewport: Viewport = { themeColor: "#f6ece2" };
 
 /** Anything that can go wrong on the round trip to Google, said plainly. */
 const SIGN_IN_ERRORS: Record<string, string> = {
@@ -80,7 +80,7 @@ export default async function LoginPage({
       <p className="mx-auto mt-8 max-w-[19rem] text-center text-caption text-ink-soft">
         <Users
           size={ICON.xs}
-          className="mr-1.5 inline-block -translate-y-px text-kesar-deep"
+          className="mr-1.5 inline-block -translate-y-px text-clay-deep"
         />
         <strong className="tnum font-semibold text-ink">
           {db.people.length}

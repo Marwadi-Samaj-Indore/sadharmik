@@ -4,7 +4,7 @@ import { getSession, googleEmail } from "@/lib/session";
 import { VerifyForm } from "./VerifyForm";
 
 /** Cream page, cream chrome — same reason as the sign-in screen before it. */
-export const viewport: Viewport = { themeColor: "#fdf8f1" };
+export const viewport: Viewport = { themeColor: "#f6ece2" };
 
 export default async function VerifyPage() {
   const session = await getSession();
@@ -34,7 +34,7 @@ export default async function VerifyPage() {
 
         <VerifyForm />
 
-        <p className="mt-8 rounded-inner bg-kesar-mist px-4 py-3 text-2xs leading-relaxed text-ink-soft">
+        <p className="mt-8 rounded-inner bg-sand px-4 py-3 text-2xs leading-relaxed text-ink-soft">
           Can&apos;t get in? Your number may not be in the directory yet, or it may be
           recorded differently. Ask a committee member to check your entry.
         </p>

@@ -28,7 +28,7 @@ export function CelebrationCard({ entry }: { entry: Celebration }) {
     <div
       className={`flex items-center gap-1.5 font-semibold ${
         isToday ? "text-base" : "text-sm"
-      } text-birthday`}
+      } text-sun-ink`}
     >
       {entry.kind === "birthday" ? <Cake size={ICON.sm} /> : <Heart size={ICON.sm} />}
       {/* nowrap: on a narrow phone "In 7 days" broke after the number */}

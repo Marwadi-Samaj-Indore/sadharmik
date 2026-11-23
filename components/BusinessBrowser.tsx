@@ -120,12 +120,12 @@ export function BusinessBrowser({
                       href={`/business/${c.slug}`}
                       className="card-fill card-tap flex h-full flex-col justify-between gap-3 p-3.5"
                     >
-                      <CategoryIcon category={c.name} size={ICON.lg} className="text-kesar-ink" />
+                      <CategoryIcon category={c.name} size={ICON.lg} className="text-clay-ink" />
                       <div>
                         <p className="font-display text-caption font-bold leading-snug">
                           {c.name}
                         </p>
-                        <p className="tnum mt-0.5 text-xs font-semibold text-kesar-ink/70">
+                        <p className="tnum mt-0.5 text-xs font-semibold text-clay-ink/70">
                           {c.count} {c.count === 1 ? "member" : "members"}
                         </p>
                       </div>

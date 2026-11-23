@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Terms | Marwadi Samaj Indore" };
-export const viewport: Viewport = { themeColor: "#fdf8f1" };
+export const viewport: Viewport = { themeColor: "#f6ece2" };
 
 /**
  * Public, like /privacy, because Google's sign-in branding page asks for both
@@ -44,11 +44,11 @@ export default function TermsPage() {
         </li>
         <li>
           How members&apos; details are kept is set out in the{" "}
-          <Link href="/privacy" className="font-semibold text-kesar-text">
+          <Link href="/privacy" className="font-semibold text-clay-text">
             privacy page
           </Link>
           . Questions: {" "}
-          <a className="font-semibold text-kesar-text" href="mailto:marwadisamajindore@gmail.com">
+          <a className="font-semibold text-clay-text" href="mailto:marwadisamajindore@gmail.com">
             marwadisamajindore@gmail.com
           </a>
           .
@@ -56,7 +56,7 @@ export default function TermsPage() {
       </ul>
 
       <p className="mt-10">
-        <Link href="/login" className="font-semibold text-kesar-text">
+        <Link href="/login" className="font-semibold text-clay-text">
           ← Back to sign in
         </Link>
       </p>

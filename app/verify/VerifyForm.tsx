@@ -25,7 +25,7 @@ export function VerifyForm() {
               <input type="hidden" name="personId" value={c.id} />
               <button
                 type="submit"
-                className="card flex w-full items-center justify-between px-4 py-3 text-left transition-colors active:bg-kesar-mist"
+                className="card flex w-full items-center justify-between px-4 py-3 text-left transition-colors active:bg-sand"
               >
                 <span>
                   <span className="block font-semibold">{c.name}</span>
@@ -46,7 +46,7 @@ export function VerifyForm() {
         Your mobile number
       </label>
       <div className="flex items-center gap-2">
-        <span className="tnum flex h-11 shrink-0 items-center rounded-inner bg-kesar-mist px-3 text-sm font-semibold text-ink-soft">
+        <span className="tnum flex h-11 shrink-0 items-center rounded-inner bg-sand px-3 text-sm font-semibold text-ink-soft">
           +91
         </span>
         <input

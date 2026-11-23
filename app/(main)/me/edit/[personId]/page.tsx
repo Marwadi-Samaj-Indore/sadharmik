@@ -435,7 +435,7 @@ export default async function EditPersonPage({
                 <span className="switch-state-on text-xs font-medium text-ink-faint">
                   Visible
                 </span>
-                <span className="switch-state-off text-xs font-semibold text-kesar-text">
+                <span className="switch-state-off text-xs font-semibold text-clay-text">
                   Hidden
                 </span>
                 <span aria-hidden="true" className="switch" />

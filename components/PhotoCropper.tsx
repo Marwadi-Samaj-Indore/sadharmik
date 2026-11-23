@@ -271,7 +271,7 @@ export function PhotoCropper({
             step={0.01}
             value={zoom}
             onChange={(e) => setZoom(Number(e.target.value))}
-            className="h-2 w-full accent-[var(--color-kesar)]"
+            className="h-2 w-full accent-[var(--color-clay)]"
           />
         </label>
         <p className="mt-3 text-center text-xs text-white/70">

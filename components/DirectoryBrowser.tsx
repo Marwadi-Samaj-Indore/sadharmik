@@ -153,7 +153,7 @@ export function DirectoryBrowser({
             aria-label="Filters"
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-chip border transition-colors ${
               activeFilters > 0
-                ? "border-kesar-deep bg-kesar-deep text-white"
+                ? "border-ink bg-ink text-cream"
                 : "border-line bg-surface text-ink"
             }`}
           >
@@ -164,7 +164,7 @@ export function DirectoryBrowser({
         {/* Households / People. One control split in two halves, not two
             chips — chips read as filters that can both be off, and this
             choice is never off. The filled half is the mode you're in. */}
-        <div className="mt-3 grid grid-cols-2 gap-1 rounded-chip border border-line bg-surface p-1">
+        <div className="mt-3 grid grid-cols-2 gap-1 rounded-chip border border-line bg-sand p-1">
           {(["households", "people"] as const).map((m) => (
             <button
               key={m}

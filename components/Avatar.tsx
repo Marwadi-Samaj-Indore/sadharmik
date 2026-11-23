@@ -23,6 +23,17 @@ export type AvatarSize = keyof typeof SIZES;
  * `data-avatar` marks the element the FLIP transition measures when a row is
  * tapped (see components/Flip.tsx).
  */
+// A directory page of identical tiles reads as a list of missing photos.
+// Each monogram takes one of the three accents, chosen by its letters so a
+// person keeps the same colour everywhere they appear.
+const TINTS = [
+  "bg-clay-pale text-clay-ink",
+  "bg-sun-pale text-sun-ink",
+  "bg-leaf-pale text-leaf-ink",
+] as const;
+const tint = (label: string) =>
+  TINTS[[...label].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % TINTS.length];
+
 export function AvatarLite({
   label,
   photo,
@@ -54,7 +65,7 @@ export function AvatarLite({
     <div
       aria-hidden="true"
       data-avatar=""
-      className={`${SIZES[size]} flex shrink-0 items-center justify-center rounded-full bg-kesar-pale font-serif font-semibold text-kesar-ink ${className}`}
+      className={`${SIZES[size]} flex shrink-0 items-center justify-center rounded-full font-serif font-semibold ${tint(label)} ${className}`}
     >
       {label || "?"}
     </div>

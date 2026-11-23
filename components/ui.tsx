@@ -33,7 +33,7 @@ export function BackBar({ label, href }: { label: string; href: string }) {
       <Link
         href={href}
         aria-label="Go back"
-        className="flex h-11 w-11 items-center justify-center rounded-chip transition-[background-color,transform] duration-150 hover:bg-kesar-mist active:scale-90 active:bg-kesar-pale"
+        className="flex h-11 w-11 items-center justify-center rounded-chip transition-[background-color,transform] duration-150 hover:bg-sand active:scale-90 active:bg-clay-pale"
       >
         <ChevronLeft size={ICON.xl} className="text-ink" />
       </Link>
@@ -73,7 +73,7 @@ export function EmptyState({
   return (
     <div className="rise card-mist mx-4 px-5 py-9 text-center">
       {icon && (
-        <span className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-surface/70 text-kesar-ink">
+        <span className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-sun-pale text-sun-ink">
           {icon}
         </span>
       )}
@@ -112,7 +112,7 @@ export function DetailRow({
     return (
       <Link
         href={href}
-        className="flex min-h-[2.75rem] items-center justify-between gap-4 border-b border-line-soft px-4 py-2.5 last:border-0 transition-colors active:bg-kesar-mist"
+        className="flex min-h-[2.75rem] items-center justify-between gap-4 border-b border-line-soft px-4 py-2.5 last:border-0 transition-colors active:bg-sand"
       >
         {body}
       </Link>
@@ -131,13 +131,15 @@ export function Badge({
   tone = "default",
 }: {
   children: ReactNode;
-  tone?: "default" | "warn" | "info" | "danger";
+  tone?: "default" | "warn" | "info" | "danger" | "success";
 }) {
   const tones = {
-    default: "bg-kesar-mist text-ink-soft",
-    warn: "bg-warn-soft text-birthday",
-    info: "bg-kesar-pale text-kesar-ink",
+    // One accent per meaning: sun = notice this, leaf = good, clay = ours
+    default: "bg-sand text-ink-soft",
+    warn: "bg-sun-pale text-sun-ink",
+    info: "bg-leaf-pale text-leaf-ink",
     danger: "bg-danger-soft text-danger",
+    success: "bg-leaf-pale text-leaf-ink",
   };
   return (
     <span
@@ -162,10 +164,10 @@ export function Meter({ value, label }: { value: number; label?: string }) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={label ?? "Profile complete"}
-        className="h-2 overflow-hidden rounded-chip bg-surface"
+        className="h-2 overflow-hidden rounded-chip bg-line-soft"
       >
         <div
-          className="h-full rounded-chip bg-kesar transition-[width] duration-500"
+          className="h-full rounded-chip bg-leaf transition-[width] duration-500"
           style={{ width: `${Math.max(value, 3)}%` }}
         />
       </div>

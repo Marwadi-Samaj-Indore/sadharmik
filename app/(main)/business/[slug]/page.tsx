@@ -31,7 +31,7 @@ export default async function CategoryPage({
       <BackBar label={category} href="/business" />
 
       <div className="px-4 pt-5">
-        <span className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-kesar-pale text-kesar-ink">
+        <span className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-clay-pale text-clay-ink">
           <CategoryIcon category={category} size={ICON.lg} />
         </span>
         <h1 className="text-title">{category}</h1>

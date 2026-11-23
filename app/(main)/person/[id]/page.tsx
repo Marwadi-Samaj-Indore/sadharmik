@@ -81,7 +81,7 @@ export default async function PersonPage({
           <Avatar
             person={person}
             size="hero"
-            className="ring-4 ring-kesar-pale"
+            className="ring-4 ring-clay-pale"
           />
         </FlipTarget>
 
@@ -96,7 +96,7 @@ export default async function PersonPage({
         {household && (
           <Link
             href={`/household/${household.id}`}
-            className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-kesar-text underline-offset-2 hover:underline"
+            className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-clay-text underline-offset-2 hover:underline"
           >
             {household.familyName}
           </Link>
@@ -252,7 +252,7 @@ export default async function PersonPage({
               {person.business.category && (
                 <Link
                   href={`/business/${categorySlug(person.business.category)}`}
-                  className="inline-flex items-center gap-1.5 rounded-chip bg-surface/70 px-2.5 py-1 text-2xs font-semibold text-kesar-ink"
+                  className="inline-flex items-center gap-1.5 rounded-chip bg-surface/70 px-2.5 py-1 text-2xs font-semibold text-clay-ink"
                 >
                   <CategoryIcon category={person.business.category} size={ICON.micro} />
                   {person.business.category}
@@ -264,7 +264,7 @@ export default async function PersonPage({
                 </h3>
               )}
               {person.business.description && (
-                <p className="mt-1 text-sm leading-relaxed text-kesar-ink/85">
+                <p className="mt-1 text-sm leading-relaxed text-clay-ink/85">
                   {person.business.description}
                 </p>
               )}
@@ -277,7 +277,7 @@ export default async function PersonPage({
                     .map((k) => (
                       <span
                         key={k}
-                        className="rounded-chip bg-surface/70 px-2 py-0.5 text-2xs font-medium text-kesar-ink"
+                        className="rounded-chip bg-surface/70 px-2 py-0.5 text-2xs font-medium text-clay-ink"
                       >
                         {k}
                       </span>
@@ -376,7 +376,7 @@ export default async function PersonPage({
             action={
               <Link
                 href={`/household/${household.id}`}
-                className="text-xs font-semibold text-kesar-text"
+                className="text-xs font-semibold text-clay-text"
               >
                 View household
               </Link>

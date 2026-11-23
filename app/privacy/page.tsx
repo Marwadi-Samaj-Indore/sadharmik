@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Privacy | Marwadi Samaj Indore" };
-export const viewport: Viewport = { themeColor: "#fdf8f1" };
+export const viewport: Viewport = { themeColor: "#f6ece2" };
 
 /**
  * The one page anyone can read without signing in.
@@ -75,14 +75,14 @@ export default function PrivacyPage() {
       <p className="mt-2">
         Edit your profile at any time under the Me tab. To have your record or
         your family&apos;s removed, write to{" "}
-        <a className="font-semibold text-kesar-text" href="mailto:marwadisamajindore@gmail.com">
+        <a className="font-semibold text-clay-text" href="mailto:marwadisamajindore@gmail.com">
           marwadisamajindore@gmail.com
         </a>
         .
       </p>
 
       <p className="mt-10">
-        <Link href="/login" className="font-semibold text-kesar-text">
+        <Link href="/login" className="font-semibold text-clay-text">
           ← Back to sign in
         </Link>
       </p>

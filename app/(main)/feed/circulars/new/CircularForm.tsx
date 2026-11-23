@@ -121,7 +121,7 @@ export function CircularForm() {
 
         {dataUrl && (
           <p className="mt-3 flex items-center gap-2 rounded-inner bg-surface px-3 py-2 text-sm">
-            <Check size={ICON.sm} className="shrink-0 text-kesar-text" />
+            <Check size={ICON.sm} className="shrink-0 text-clay-text" />
             <span className="min-w-0 flex-1 truncate">{fileName || "File ready"}</span>
           </p>
         )}
