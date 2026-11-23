@@ -195,12 +195,12 @@ export const displayPhone = (phone: string) =>
 // Signed from the samaj: only the committee sees these cards, and they greet
 // members on its behalf
 export function birthdayMessage(p: Person) {
-  return `Jai Jinendra ${p.firstName}! Wishing you a very happy birthday and a healthy, joyful year ahead. — Marwadi Samaj Indore`;
+  return `Jai Jinendra ${p.firstName}! Wishing you a very happy birthday and a healthy, joyful year ahead. From Marwadi Samaj Indore`;
 }
 
 export function anniversaryMessage(names: string, dateIso: string) {
   const years = ordinalYears(dateIso);
-  return `Jai Jinendra! Happy${years ? ` ${years}${suffix(years)}` : ""} Wedding Anniversary to ${names}. Wishing you both continued happiness together. — Marwadi Samaj Indore`;
+  return `Jai Jinendra! Happy${years ? ` ${years}${suffix(years)}` : ""} Wedding Anniversary to ${names}. Wishing you both continued happiness together. From Marwadi Samaj Indore`;
 }
 
 const suffix = (n: number) => {

@@ -144,7 +144,7 @@ export function BusinessBrowser({
               <p className="px-4 pb-3 text-xs leading-relaxed text-ink-soft">
                 {filled.length > 0
                   ? "These categories are waiting for their first member."
-                  : "Nobody has added their business yet — the Excel file had no business data. Add yours from the Me tab and it will appear here straight away."}
+                  : "Nobody has added their business yet. Add yours from the Me tab and it will appear here straight away."}
               </p>
               <ul className="grid grid-cols-2 gap-2 px-4">
                 {emptyTrades.map((c) => (

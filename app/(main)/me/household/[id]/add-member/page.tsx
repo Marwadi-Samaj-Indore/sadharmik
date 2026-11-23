@@ -32,7 +32,7 @@ export default async function AddFamilyMemberPage({
         <input type="hidden" name="returnTo" value={returnTo} />
         <h1 className="text-title">Add a family member</h1>
         <p className="mt-1 text-sm text-ink-soft">
-          Add anyone in {household.familyName} who isn&apos;t listed yet — a child,
+          Add anyone in {household.familyName} who isn&apos;t listed yet: a child,
           parent, or other relative living with you. You can fill in the rest of their
           profile afterwards.
         </p>

@@ -174,7 +174,7 @@ export function CommitteeMemberForm({
             className="field"
           />
           <p className="mt-1 text-2xs text-ink-faint">
-            0 shows first and biggest — usually the head of the group. Everyone else
+            0 shows first and biggest, usually the head of the group. Everyone else
             sorts by this number, smallest first.
           </p>
         </div>

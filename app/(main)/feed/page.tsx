@@ -148,7 +148,7 @@ export default async function FeedPage({
           <AlertCircle size={ICON.sm} className="mt-0.5 shrink-0" />
           <span>
             You&apos;ve already posted twice this week. This keeps the feed useful for
-            everyone — please try again in a few days.
+            everyone. Please try again in a few days.
           </span>
         </div>
       )}
@@ -174,14 +174,6 @@ export default async function FeedPage({
           <span className="tnum opacity-70">{db.meetings.length}</span>
         </Link>
         <Link
-          href="/feed?tab=requirements"
-          aria-current={active === "requirements" ? "page" : undefined}
-          className={`chip ${active === "requirements" ? "chip-active" : ""}`}
-        >
-          Requirements
-          <span className="tnum opacity-70">{requirements.length}</span>
-        </Link>
-        <Link
           href="/feed?tab=circulars"
           aria-current={active === "circulars" ? "page" : undefined}
           className={`chip ${active === "circulars" ? "chip-active" : ""}`}
@@ -197,12 +189,20 @@ export default async function FeedPage({
           Matrimonial
           <span className="tnum opacity-70">{biodataRows.length}</span>
         </Link>
+        <Link
+          href="/feed?tab=requirements"
+          aria-current={active === "requirements" ? "page" : undefined}
+          className={`chip ${active === "requirements" ? "chip-active" : ""}`}
+        >
+          Requirements
+          <span className="tnum opacity-70">{requirements.length}</span>
+        </Link>
       </div>
 
       {active === "requirements" && (
         <p className="mt-3 px-4 text-xs leading-relaxed text-ink-soft">
           Post what you need and the group can help. Requirements stay searchable for 30
-          days — unlike a WhatsApp message, which scrolls away by Friday.
+          days, unlike a WhatsApp message, which scrolls away by Friday.
         </p>
       )}
 
@@ -255,7 +255,7 @@ export default async function FeedPage({
               <EmptyState
                 icon={<CalendarDays size={ICON.xxl} />}
                 title="No meetings yet"
-                body="Outings, monthly get-togethers, themed evenings — the committee will post them here."
+                body="Outings, monthly get-togethers, themed evenings: the committee will post them here."
               />
             </div>
           ) : (
@@ -298,7 +298,7 @@ export default async function FeedPage({
       ) : active === "matrimonial" ? (
         <>
           <p className="mt-3 px-4 text-xs leading-relaxed text-ink-soft">
-            Matrimonial profiles shared by members — for their own families or for
+            Matrimonial profiles shared by members, for their own families or for
             relatives outside the group. Contact whoever shared it.
           </p>
 
@@ -314,7 +314,7 @@ export default async function FeedPage({
               <EmptyState
                 icon={<FileText size={ICON.xxl} />}
                 title="No matrimonial profiles shared yet"
-                body="Share one for anyone — your family or a relative outside the samaj. Members can view it, save it, and message you about it."
+                body="Share one for anyone: your family or a relative outside the samaj. Members can view it, save it, and message you about it."
               />
             </div>
           ) : (
@@ -332,7 +332,7 @@ export default async function FeedPage({
             body={
               active === "announcements"
                 ? "Committee announcements will appear here. Only admins can post them."
-                : "Nobody needs anything right now. If you do, post it — someone in the group probably has what you're looking for."
+                : "Nobody needs anything right now. If you do, post it. Someone in the group probably has what you're looking for."
             }
             action={
               active === "requirements" ? (
@@ -478,7 +478,7 @@ export default async function FeedPage({
 
       {session.isAdmin && (
         <p className="mt-6 px-4 text-xs text-ink-faint">
-          You are signed in as a committee admin — you can pin, lock comments on, and
+          You are signed in as a committee admin, so you can pin, lock comments on, and
           delete any post.
         </p>
       )}

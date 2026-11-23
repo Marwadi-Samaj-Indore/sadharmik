@@ -74,7 +74,7 @@ export function BiodataForm() {
 
       <h1 className="text-title">Add a matrimonial profile</h1>
       <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-        For anyone — your own family, a cousin, a relative outside the samaj.
+        For anyone: your own family, a cousin, a relative outside the samaj.
         Members will contact <strong>you</strong> about it.
       </p>
 
@@ -144,7 +144,7 @@ export function BiodataForm() {
           name="note"
           rows={3}
           maxLength={400}
-          placeholder="Age, education, city, what the family is looking for — anything that helps."
+          placeholder="Age, education, city, what the family is looking for, anything that helps."
           className="field resize-none"
         />
       </div>

@@ -120,7 +120,7 @@ export default async function AdminPage() {
             "Needs attention"
           ) : (
             <>
-              Needs attention — <span className="tnum">{open.length}</span> left
+              Needs attention: <span className="tnum">{open.length}</span> left
             </>
           )}
         </SectionHeading>
@@ -188,7 +188,7 @@ export default async function AdminPage() {
       {/* Completion dashboard */}
       <section className="mt-7">
         <SectionHeading>
-          Chase list — average <span className="tnum">{avgCompletion}</span>% complete
+          Chase list: average <span className="tnum">{avgCompletion}</span>% complete
         </SectionHeading>
         <p className="px-4 pb-2 text-xs leading-relaxed text-ink-soft">
           Least complete profiles first. Tap WhatsApp to send a reminder with the app
@@ -227,7 +227,7 @@ export default async function AdminPage() {
                 <a
                   href={whatsappLink(
                     person.whatsapp,
-                    `Jai Jinendra ${person.firstName}, this is from the samaj committee. Please open the Marwadi Samaj Indore app and complete your profile — especially your photo and business details, so other members can find you. Thank you!`
+                    `Jai Jinendra ${person.firstName}, this is from the samaj committee. Please open the Marwadi Samaj Indore app and complete your profile, especially your photo and business details, so other members can find you. Thank you!`
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -286,7 +286,7 @@ export default async function AdminPage() {
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-semibold">Committee section</span>
             <span className="block text-xs text-ink-soft">
-              President, patrons, secretaries — shown with photos on Home
+              President, patrons and secretaries, shown with photos on Home
             </span>
           </span>
         </Link>
@@ -308,7 +308,7 @@ export default async function AdminPage() {
                 Export the whole directory
               </span>
               <span className="block text-xs text-ink-soft">
-                CSV file that opens in Excel — the group always owns its data
+                CSV file that opens in Excel. The group always owns its data
               </span>
             </span>
           </a>

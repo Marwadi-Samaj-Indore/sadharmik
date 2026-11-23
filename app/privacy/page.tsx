@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Privacy — Marwadi Samaj Indore" };
+export const metadata: Metadata = { title: "Privacy | Marwadi Samaj Indore" };
 export const viewport: Viewport = { themeColor: "#fdf8f1" };
 
 /**
@@ -34,8 +34,8 @@ export default function PrivacyPage() {
 
       <h2 className="mt-6 font-display text-base font-bold text-ink">What it holds</h2>
       <p className="mt-2">
-        The details families gave the samaj on its directory forms — names,
-        relations, ages, mobile numbers, addresses, gotra and native place — and
+        The details families gave the samaj on its directory forms (names,
+        relations, ages, mobile numbers, addresses, gotra and native place), and
         anything members add themselves, such as a photo, date of birth, wedding
         anniversary, education and business details.
       </p>

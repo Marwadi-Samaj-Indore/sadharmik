@@ -82,7 +82,7 @@ export function NewPostForm({
       <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
         {type === "announcement"
           ? "This goes to all members. You can pin one announcement to the Home screen."
-          : "Be specific — the clearer you are, the more likely someone can help. Requirements stay searchable for 30 days, then disappear on their own."}
+          : "Be specific: the clearer you are, the more likely someone can help. Requirements stay searchable for 30 days, then disappear on their own."}
       </p>
 
       {type === "announcement" && (
@@ -160,7 +160,7 @@ export function NewPostForm({
             placeholder={
               type === "announcement"
                 ? "Where, when, and what members need to bring or know."
-                : "Give the details — budget, timeline, area, anything that helps someone decide if they can help."
+                : "Give the details: budget, timeline, area, anything that helps someone decide if they can help."
             }
             className="field resize-none"
           />

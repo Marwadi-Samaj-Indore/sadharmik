@@ -164,7 +164,7 @@ export default async function MePage() {
                     })}
                   </ul>
                   <p className="mt-2 px-1 text-xs leading-relaxed text-ink-soft">
-                    You can edit anyone in your household — useful for parents and
+                    You can edit anyone in your household, useful for parents and
                     children who don&apos;t use the app themselves.
                   </p>
                 </div>
@@ -192,7 +192,7 @@ export default async function MePage() {
                     <p className="text-xs leading-relaxed text-ink-soft">
                       If your family shares one phone number or account, the app
                       opens as whoever signed in first. Tap your own name to use it
-                      as yourself — it stays that way on this phone until you switch
+                      as yourself. It stays that way on this phone until you switch
                       back or sign out.
                     </p>
                     <ul className="mt-3 space-y-2">

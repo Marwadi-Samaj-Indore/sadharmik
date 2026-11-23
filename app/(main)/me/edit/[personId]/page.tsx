@@ -252,7 +252,7 @@ export default async function EditPersonPage({
         <fieldset className="mt-7">
           <legend className="section-title mb-1">Business & work</legend>
           <p className="mb-3 text-xs leading-relaxed text-ink-soft">
-            This is what makes the app useful to the group — members search here when
+            This is what makes the app useful to the group: members search here when
             they need a supplier, a professional, or a recommendation.
           </p>
           <div className="space-y-4">
@@ -308,7 +308,7 @@ export default async function EditPersonPage({
             </div>
             <div>
               <label htmlFor="businessDescription" className="label">
-                What you do — one line
+                What you do (one line)
               </label>
               <input
                 id="businessDescription"
@@ -413,7 +413,7 @@ export default async function EditPersonPage({
                 ["hideEmail", "Email", person.privacy.hideEmail],
                 [
                   "hideDobYear",
-                  "Birth year — day & month always shown",
+                  "Birth year (day & month always shown)",
                   person.privacy.hideDobYear,
                 ],
                 ["hidePhoto", "Photo", person.privacy.hidePhoto],

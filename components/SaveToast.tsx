@@ -11,7 +11,7 @@ const MESSAGES: Record<string, string> = {
   post: "Posted",
   member: "Family member added",
   meeting: "Meeting saved",
-  switched: "Switched — you are now using the app as this member",
+  switched: "Switched. You are now using the app as this member",
 };
 
 /**

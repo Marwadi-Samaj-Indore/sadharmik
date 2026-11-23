@@ -20,7 +20,7 @@ export default async function CommitteeAdminPage() {
       <div className="px-4 pt-5">
         <h1 className="text-title">Committee section</h1>
         <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-          Shown on the Home screen. Display order 0 shows first and biggest —
+          Shown on the Home screen. Display order 0 shows first and biggest,
           usually the head of the group.
         </p>
 
@@ -33,7 +33,7 @@ export default async function CommitteeAdminPage() {
           <div className="mt-4">
             <EmptyState
               title="Nobody added yet"
-              body="Add the group's office bearers — president, patrons, secretaries — and they'll appear on Home."
+              body="Add the group's office bearers (president, patrons, secretaries) and they'll appear on Home."
             />
           </div>
         ) : (

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Terms — Marwadi Samaj Indore" };
+export const metadata: Metadata = { title: "Terms | Marwadi Samaj Indore" };
 export const viewport: Viewport = { themeColor: "#fdf8f1" };
 
 /**
@@ -27,7 +27,7 @@ export default function TermsPage() {
         </li>
         <li>
           Members&apos; details are shared in trust. Use them to stay in touch within the
-          samaj — not for advertising, bulk messages, or passing on to anyone outside it.
+          samaj, not for advertising, bulk messages, or passing on to anyone outside it.
         </li>
         <li>
           Keep your own details correct, and add or change a family member&apos;s only

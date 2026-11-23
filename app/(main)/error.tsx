@@ -31,7 +31,7 @@ export default function ErrorScreen({
       <h1 className="mt-5 text-title">This didn&apos;t load</h1>
       <p className="mt-2 max-w-xs text-sm leading-relaxed text-ink-soft">
         Something went wrong fetching the directory. It&apos;s usually a brief
-        connection problem — trying again normally fixes it.
+        connection problem, and trying again normally fixes it.
       </p>
 
       <button type="button" onClick={reset} className="btn btn-primary mt-6 w-full">
