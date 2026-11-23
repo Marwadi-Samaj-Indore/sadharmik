@@ -18,6 +18,13 @@ next-env.d.ts
 *.xls
 *.csv
 .data/
+# Photos of the paper forms (dropped in the folder root to type from) carry the
+# same personal data. Only root-level images — public/ and logo/ are the app's.
+/*.jpg
+/*.jpeg
+/*.png
+/*.heic
+/*.pdf
 
 # Secrets — the Supabase service key lives here. Never commit.
 # Every .env variant is ignored, but the placeholder template stays tracked so
@@ -30,3 +37,4 @@ next-env.d.ts
 
 # Design-pass screenshot output
 .screenshots/
+.venv/

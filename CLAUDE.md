@@ -25,7 +25,15 @@ the owner, who is not a developer. `README.md` is in the same register.
 - **Supabase is configured** (project "Sadharmik App", Mumbai) and `.env.local` is
   filled; `npm run check:setup` passes. Book 2 is loaded: 131 households, 660 people,
   128 needs-attention issues.
-- **Importer:** `scripts/import-book2.mjs` (`npm run import`, then `npm run migrate`).
+- **Data entry from the paper forms** goes into `Member Entry Sheet.xlsx` (built by
+  `scripts/build-entry-sheet.py`; local only, like every .xlsx): one row per person,
+  the form's circled number in FORM NO. on every row, SR. 1 the head, family fields on
+  the head's row. Father's name, office/residence phones and "circulars at" have no app
+  field yet — the importer counts them as kept in the sheet only.
+- **Importer:** `scripts/import.mjs` (`npm run import -- <file>`, then `npm run migrate`)
+  reads either layout — an ENTRY sheet (columns found by heading) or Book 2's MAIN
+  SHEET; `--dry-run` checks without writing. Book 2 output was verified byte-identical
+  to the original importer after the rewrite.
   The bracketed number is the book's own family number (1–225), not S.NO — the book
   gives two families (193); the repeat gets id `h193-<sno>` and an issue. IDs are
   `h<n>` and `p<n>-<i>`. The logic test suite (`check-logic.ts`) is not rewritten yet.
@@ -46,7 +54,7 @@ the owner, who is not a developer. `README.md` is in the same register.
 | `npm run dev` | Dev server on port **3310** (PMConnect uses 3210; both can run at once) |
 | `npm run build` | Production build |
 | `npm run typecheck` | Typecheck the app — there is no lint script. `tsconfig.scripts.json` is kept for the test suite; when `scripts/check-logic.ts` returns, add `&& tsc -p tsconfig.scripts.json` back, as PMConnect has |
-| `npm run import` | Reads the spreadsheet into `.data/db.json`; prints counts only |
+| `npm run import -- "<file>.xlsx"` | Reads a spreadsheet (entry sheet or Book 2, the default) into `.data/db.json`; prints counts only. `--dry-run` writes nothing |
 | `npm run migrate` | Pushes `.data/db.json` into Supabase (upserts) |
 
 **Never run `npm run build` while `npm run dev` is up.** They share `.next`; the build
