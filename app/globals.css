@@ -106,14 +106,14 @@
   --text-tab-title--line-height: 1.15;
 
   /* Type. Three faces, three jobs — Jakarta speaks for the app (buttons,
-     titles, chips), Inter for information, Fraunces only ever for a name.
+     titles, chips), Inter for information, Noto Serif only ever for a name.
      Devanagari sits in every stack before the system fonts so Hindi renders
      in a face drawn to match, not whatever the OS reaches for.
      These chains only resolve because the next/font variables sit on <html>
      — see the note in app/layout.tsx before "simplifying" that. */
   --font-display: var(--font-jakarta), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), var(--font-devanagari), Georgia, serif;
+  --font-serif: var(--font-serif-face), var(--font-devanagari), Georgia, serif;
 
   /* Motion. Entrances ease out; exits are quicker than entrances, which is
      what makes an interface feel responsive rather than sluggish. */

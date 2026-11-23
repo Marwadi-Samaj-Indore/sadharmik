@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import {
   Plus_Jakarta_Sans,
   Inter,
-  Fraunces,
+  Noto_Serif,
   Noto_Sans_Devanagari,
 } from "next/font/google";
 import { getTheme } from "@/lib/theme";
@@ -26,11 +26,17 @@ const inter = Inter({
  * families in a serif, and that association — not decoration — is what makes
  * the profile and household heroes read as a yearbook page rather than a
  * form readout. It is deliberately absent from buttons, chips and body text.
+ *
+ * Noto Serif, not Fraunces (changed 23 Nov 2026): Fraunces draws its capital J
+ * dropping below the baseline, and in a samaj where half the names are "Jain"
+ * that quirk was on every screen. Noto Serif's J sits on the line, and it is
+ * the sibling of the Devanagari face below, so Hindi and English names match.
+ * Compared against Lora, Source Serif, Literata, PT Serif and Merriweather.
  */
-const fraunces = Fraunces({
+const serif = Noto_Serif({
   subsets: ["latin"],
   weight: ["500", "600"],
-  variable: "--font-fraunces",
+  variable: "--font-serif-face",
   display: "swap",
 });
 
@@ -102,7 +108,7 @@ export default async function RootLayout({
     <html
       lang="en"
       data-theme={theme}
-      className={`${jakarta.variable} ${inter.variable} ${fraunces.variable} ${devanagari.variable}`}
+      className={`${jakarta.variable} ${inter.variable} ${serif.variable} ${devanagari.variable}`}
     >
       <head>
         {/* Only runs for members who chose "Match my phone". Resolves to a

@@ -164,7 +164,7 @@ generated from. One file serves cream, white and dark grounds, so `.lockup` and
 so screens set the name in English, in the serif, beneath it. App icons are interim until the
 committee decides whether a store-facing icon carries the swastik (`SPEC.md` §5).
 
-Type: Fraunces for names only, Jakarta for the interface, Inter for reading, Noto Sans
+Type: Noto Serif for names only (not Fraunces, whose J drops below the line), Jakarta for the interface, Inter for reading, Noto Sans
 Devanagari behind all three so Hindi renders properly. English first; Hindi labels are
 a later phase.
 
