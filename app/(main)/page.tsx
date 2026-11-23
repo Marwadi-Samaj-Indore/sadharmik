@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from "lucide-react";
+import { Heart, Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from "lucide-react";
 import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { SectionHeading, Meter, Badge } from "@/components/ui";
@@ -88,6 +88,21 @@ export default async function HomePage() {
         >
           <Search size={ICON.sm} />
           Search members, business, area…
+        </Link>
+
+        {/* Matrimony: asks boy or girl first, then lists unmarried members */}
+        <Link
+          href="/matrimony"
+          className="card-tap mt-3 flex items-center gap-3 rounded-card bg-clay-pale px-4 py-3.5 text-clay-ink"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface/70">
+            <Heart size={ICON.md} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-base font-semibold">Matrimony</span>
+            <span className="block text-xs">Unmarried members of the samaj</span>
+          </span>
+          <ChevronRight size={ICON.md} />
         </Link>
       </div>
 
