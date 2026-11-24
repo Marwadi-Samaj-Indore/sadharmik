@@ -15,6 +15,16 @@
  * introduction after Google instead of a way in by itself.
  *
  * At least one of the two must be on.
+ *
+ * COMMITTEE_CODE_SIGN_IN is the shared code that grants full admin rights
+ * (ADMIN_ACCESS_CODE). OFF on the live site since 25 Nov 2026: the four
+ * admins sign in with their own Google accounts, and a shared password is the
+ * one way in that can leak without anyone noticing. It stays usable on a
+ * development copy (`npm run dev`), where it is how changes get tested as an
+ * admin. Turn it back on only as an emergency door, if Google sign-in breaks.
  */
 export const GOOGLE_SIGN_IN = true;
 export const MOBILE_SIGN_IN = false;
+const COMMITTEE_CODE_ON_LIVE_SITE = false;
+export const COMMITTEE_CODE_SIGN_IN =
+  COMMITTEE_CODE_ON_LIVE_SITE || process.env.NODE_ENV === "development";

@@ -12,6 +12,8 @@ const MESSAGES: Record<string, string> = {
   member: "Family member added",
   meeting: "Meeting saved",
   switched: "Switched. You are now using the app as this member",
+  linked: "Sign-in link saved",
+  unlinked: "Profile unlinked. Its devices are signed out",
 };
 
 /**

@@ -10,6 +10,7 @@ import {
   Briefcase,
   Trash2,
   Star,
+  KeyRound,
 } from "lucide-react";
 import { getChangeLog, getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
@@ -277,6 +278,22 @@ export default async function AdminPage() {
             ))}
           </ul>
         )}
+      </section>
+
+      {/* Sign-in */}
+      <section className="mt-7 px-4">
+        <SectionHeading>Members&apos; sign-in</SectionHeading>
+        <Link href="/admin/claims" className="card card-tap flex items-center gap-3.5 p-3.5">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-leaf-pale">
+            <KeyRound size={ICON.md} className="text-leaf-ink" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold">Sign-in links</span>
+            <span className="block text-xs text-ink-soft">
+              See which Google account opens which profile, and unlink a wrong one
+            </span>
+          </span>
+        </Link>
       </section>
 
       {/* Home screen */}

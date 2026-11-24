@@ -96,7 +96,7 @@ export async function GET(request: Request) {
   const isAdmin = db.admins.includes(email);
 
   if (person || isAdmin) {
-    await setSession(isAdmin ? email : null, person?.id ?? null);
+    await setSession(isAdmin ? email : null, person ?? null);
     return NextResponse.redirect(home);
   }
 

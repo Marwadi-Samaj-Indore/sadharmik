@@ -106,6 +106,17 @@ import them, or types from them, into a client component (`Theme` lives in
   readable. Retry middleware on a preview branch after the next Next.js update.
 - **The mobile number is an introduction, not proof.** `verifyMobile`/`chooseIdentity`
   refuse a profile already claimed by a different Google address (`linkedElsewhere`).
+  Whoever gets to an unclaimed profile first still owns it, so admins can relink or
+  unlink any profile at `/admin/claims` (`setSignInLink`, logged and undoable), and
+  pre-link a member's Gmail before their first sign-in.
+- **The member cookie is `id|fingerprint of claimedByEmail`.** Changing a profile's
+  link signs out every device issued under the old one. `setSession` takes the person
+  AS SAVED in this request, because `getDb()` is cached and would fingerprint the row
+  from before the claim. Cookies without a fingerprint are refused (all members signed
+  in once more on 25 Nov 2026).
+- **Committee-code sign-in is off on the live site** (`COMMITTEE_CODE_SIGN_IN` in
+  `lib/signin.ts`); it works under `npm run dev` only. The action refuses too, not just
+  the hidden form. Admins sign in with Google.
 - **Uploads are raster images or PDF only** (`storeImage`/`storeFile`). Never accept
   `image/svg+xml`. `/api/photo` serves only those types, with `nosniff`, and a
   `sandbox` CSP for images (not PDFs — Chrome won't render a sandboxed PDF); it is
@@ -119,8 +130,10 @@ import them, or types from them, into a client component (`Theme` lives in
 - CSV export prefixes `= + - @` cells with `'`. Session cookies are `secure` in
   production. The committee code is compared as SHA-256 digests in constant time.
   The callback only accepts a Google identity.
-- Remaining by choice: the sign-in rate limit is in memory per instance; `xlsx` and
-  Next's bundled `postcss` carry advisories but only touch our own files.
+- Remaining by choice: the sign-in rate limit is in memory per instance (with the code
+  door shut, only the mobile step after Google uses it); `xlsx` carries advisories but
+  only reads our own spreadsheets. Next's bundled `postcss` is forced to a patched
+  8.5.x by `overrides` in `package.json`; drop the override once Next ships one.
 
 ### Auth
 
@@ -143,8 +156,9 @@ are **HMAC-signed cookies**, not Supabase Auth: `sdm_person` (member), `sdm_emai
 (admin), plus short-lived `sdm_google` and `sdm_verify` for the gate, and `sdm_theme`.
 The prefix differs from PMConnect's `pmp_` so the two apps can never read each other's
 cookies on one development machine. Key: `SESSION_SECRET`, falling back to the service
-key. Committee sign-in is the shared `ADMIN_ACCESS_CODE` — the emergency door; a Google
-address in the `admins` table also grants admin.
+key. A Google address in the `admins` table grants admin. The shared `ADMIN_ACCESS_CODE`
+committee sign-in is the emergency door, closed on the live site since 25 Nov 2026 and
+reopened only by flipping `COMMITTEE_CODE_ON_LIVE_SITE` in `lib/signin.ts`.
 
 `.env` parsing treats `#` as a comment: a code containing `#` must be quoted in
 `.env.local` or it silently truncates. Vercel's env vars are unaffected.

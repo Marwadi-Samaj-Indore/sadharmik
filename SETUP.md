@@ -147,6 +147,9 @@ Postgres first. Running it again later is harmless.
 | **Secret key** (`sb_secret_…`) | *API Keys* → *Secret keys* → copy | `.env.local`, line `SUPABASE_SERVICE_ROLE_KEY` | **No. Never** |
 | **Committee code** | You choose it | `.env.local`, line `ADMIN_ACCESS_CODE` | No |
 
+Since 25 November 2026 the committee code only works on a test copy on a computer, not on
+the live site. Committee members sign in with their own Google accounts.
+
 The names in `.env.local` are the older ones. Supabase's dashboard says "publishable" and
 "secret", and the installed version of the app's Supabase library accepts both styles. If
 your dashboard still offers the old *anon* and *service_role* keys, those work too.

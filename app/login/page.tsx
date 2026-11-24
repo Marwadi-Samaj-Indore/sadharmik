@@ -8,7 +8,7 @@ import { ICON } from "@/lib/icons";
 import { AdminSignIn } from "./AdminSignIn";
 import { GoogleSignIn } from "./GoogleSignIn";
 import { VerifyForm } from "@/app/verify/VerifyForm";
-import { GOOGLE_SIGN_IN, MOBILE_SIGN_IN } from "@/lib/signin";
+import { COMMITTEE_CODE_SIGN_IN, GOOGLE_SIGN_IN, MOBILE_SIGN_IN } from "@/lib/signin";
 
 /**
  * The page is cream whatever the phone is set to, so the browser chrome has to
@@ -135,9 +135,11 @@ export default async function LoginPage({
       {/* Five people on a committee of 452 need this; everyone else needs it
           out of the way of the button. Below the fold of the decision, in the
           quietest type on the page. */}
-      <div className="mt-auto border-t border-line-soft pt-4">
-        <AdminSignIn />
-      </div>
+      {COMMITTEE_CODE_SIGN_IN && (
+        <div className="mt-auto border-t border-line-soft pt-4">
+          <AdminSignIn />
+        </div>
+      )}
     </main>
   );
 }

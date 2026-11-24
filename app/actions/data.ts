@@ -552,7 +552,8 @@ export async function undoChange(changeId: string) {
   ): string | null => (path && (!isStoredPath(path) || path === current) ? path : null);
 
   switch (entry.action) {
-    case "Updated profile": {
+    case "Updated profile":
+    case "Changed sign-in link": {
       const p = entry.before as Person;
       const current = db.people.find((x) => x.id === p.id);
       await savePerson({
@@ -607,6 +608,57 @@ export async function undoChange(changeId: string) {
 
   await markChangeUndone(changeId);
   refresh();
+}
+
+/**
+ * Changes which Google address a profile signs in with, or unlinks it.
+ *
+ * The mobile number is only an introduction, so whoever reaches an unclaimed
+ * profile first with a Google account and the number owns it. This is how the
+ * committee puts that right: blank unlinks the profile (its owner is asked for
+ * the number again next time), an address links it to that Google account
+ * straight away, so nobody else can get in first. Either way, every device
+ * signed in under the old link is signed out (the fingerprint in
+ * lib/session.ts). Logged, so it can be undone like any profile edit.
+ */
+export async function setSignInLink(personId: string, formData: FormData) {
+  const session = await requireSession();
+  if (!session.isAdmin) redirect("/me");
+
+  const db = await getDb();
+  const before = db.people.find((p) => p.id === personId);
+  if (!before) redirect("/admin/claims");
+
+  const typed = String(formData.get("email") ?? "").trim().toLowerCase();
+  const back = String(formData.get("q") ?? "").slice(0, 100);
+  // Back to the same search, carrying the outcome
+  const backTo = (key: "saved" | "error", value: string) => {
+    const params = new URLSearchParams(back ? { q: back } : {});
+    params.set(key, value);
+    return `/admin/claims?${params}`;
+  };
+
+  if (typed && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typed)) {
+    redirect(backTo("error", "format"));
+  }
+  // One address names one person, or the callback couldn't tell who signed in
+  if (typed && db.people.some((p) => p.id !== personId && p.claimedByEmail?.toLowerCase() === typed)) {
+    redirect(backTo("error", "taken"));
+  }
+
+  const after = { ...before, claimedByEmail: typed || null };
+  await savePerson(after);
+  await appendChange({
+    byEmail: session.email,
+    byName: actorName(session),
+    action: "Changed sign-in link",
+    target: shortName(before),
+    before: clone(before),
+    after: clone(after),
+  });
+
+  refresh();
+  redirect(backTo("saved", typed ? "linked" : "unlinked"));
 }
 
 export async function clearDemoContent() {

@@ -66,17 +66,48 @@ export interface Session {
   isSignedIn: boolean;
 }
 
+/**
+ * The member cookie carries the profile id AND a fingerprint of whoever owned
+ * the profile's sign-in link when the cookie was issued ("p12-0|Xy3…").
+ *
+ * Without the fingerprint a cookie was good for 90 days whatever happened to
+ * the profile: an admin who discovered that a stranger had claimed someone's
+ * profile could fix the row, but the stranger's phone would stay signed in as
+ * that member. Now, when an admin resets or changes the link (/admin/claims),
+ * every cookie issued under the old owner stops matching and that device is
+ * back at the sign-in page. Cookies from before this change carry no
+ * fingerprint and are refused, so everyone signed in once more on 25 Nov 2026.
+ */
+function claimTag(claim: string | null | undefined): string {
+  if (!claim) return "-";
+  return createHmac("sha256", secret())
+    .update(`claim:${claim.toLowerCase()}`)
+    .digest("base64url")
+    .slice(0, 12);
+}
+
+function readPersonCookie(raw: string | undefined): { id: string; tag: string } | null {
+  const payload = unsign(raw);
+  if (!payload) return null;
+  const at = payload.lastIndexOf("|");
+  if (at <= 0) return null;
+  return { id: payload.slice(0, at), tag: payload.slice(at + 1) };
+}
+
 export async function getSession(): Promise<Session> {
   const jar = await cookies();
   const email = unsign(jar.get(EMAIL_COOKIE)?.value);
-  const personId = unsign(jar.get(PERSON_COOKIE)?.value);
+  const member = readPersonCookie(jar.get(PERSON_COOKIE)?.value);
+  const personId = member?.id ?? null;
 
   if (!email && !personId) {
     return { email: null, person: null, isAdmin: false, isSignedIn: false };
   }
 
   const db = await getDb();
-  const person = personId ? db.people.find((p) => p.id === personId) ?? null : null;
+  const found = personId ? db.people.find((p) => p.id === personId) ?? null : null;
+  // The link changed hands since this cookie was issued: not this member any more
+  const person = found && member && claimTag(found.claimedByEmail) === member.tag ? found : null;
   const isAdmin = Boolean(email && db.admins.includes(email.toLowerCase()));
 
   return { email, person, isAdmin, isSignedIn: Boolean(email || person) };
@@ -90,11 +121,17 @@ export async function getSession(): Promise<Session> {
 export async function getSessionLite(): Promise<{ isSignedIn: boolean }> {
   const jar = await cookies();
   const email = unsign(jar.get(EMAIL_COOKIE)?.value);
-  const personId = unsign(jar.get(PERSON_COOKIE)?.value);
-  return { isSignedIn: Boolean(email || personId) };
+  const member = readPersonCookie(jar.get(PERSON_COOKIE)?.value);
+  return { isSignedIn: Boolean(email || member) };
 }
 
-export async function setSession(email: string | null, personId: string | null) {
+/** `person` is the profile as it stands AFTER any claim made in this request —
+    the caller passes it because getDb() is cached and would return the row
+    from before the claim, fingerprinting the wrong owner. */
+export async function setSession(
+  email: string | null,
+  person: { id: string; claimedByEmail: string | null } | null
+) {
   const jar = await cookies();
   const options = {
     httpOnly: true,
@@ -109,7 +146,9 @@ export async function setSession(email: string | null, personId: string | null) 
   if (email) jar.set(EMAIL_COOKIE, signed(email), options);
   else jar.delete(EMAIL_COOKIE);
 
-  if (personId) jar.set(PERSON_COOKIE, signed(personId), options);
+  if (person) {
+    jar.set(PERSON_COOKIE, signed(`${person.id}|${claimTag(person.claimedByEmail)}`), options);
+  }
   else jar.delete(PERSON_COOKIE);
 }
 

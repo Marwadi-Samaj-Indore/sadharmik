@@ -16,7 +16,7 @@ import {
 } from "@/lib/session";
 import { checkSignInRate, recordFailedSignIn } from "@/lib/ratelimit";
 import { shortName } from "@/lib/util";
-import { MOBILE_SIGN_IN } from "@/lib/signin";
+import { COMMITTEE_CODE_SIGN_IN, MOBILE_SIGN_IN } from "@/lib/signin";
 
 /**
  * Answering the mobile gate is itself proof of ownership, so record the
@@ -30,18 +30,19 @@ import { MOBILE_SIGN_IN } from "@/lib/signin";
  */
 const MOBILE_ONLY = "verified-by-mobile";
 
+/** Returns the profile as it stands afterwards, for the session fingerprint. */
 async function claimProfile(personId: string, email: string | null) {
   const db = await getDb();
   const person = db.people.find((p) => p.id === personId);
+  if (!person) return null;
   // The mobile-only placeholder gives way to a real address, so a member who
   // signed in before Google was switched on is still recognised after it
-  const placeholder = person?.claimedByEmail === MOBILE_ONLY;
-  if (!person || (person.claimedByEmail && !(placeholder && email))) return;
+  const placeholder = person.claimedByEmail === MOBILE_ONLY;
+  if (person.claimedByEmail && !(placeholder && email)) return person;
 
-  await savePerson({
-    ...person,
-    claimedByEmail: email ?? MOBILE_ONLY,
-  });
+  const claimed = { ...person, claimedByEmail: email ?? MOBILE_ONLY };
+  await savePerson(claimed);
+  return claimed;
 }
 
 /**
@@ -145,9 +146,9 @@ export async function verifyMobile(
     };
   }
 
-  await claimProfile(matches[0].id, proven);
+  const claimed = await claimProfile(matches[0].id, proven);
   await clearGoogleEmail();
-  await setSession(null, matches[0].id);
+  await setSession(null, claimed);
   redirect("/");
 }
 
@@ -174,9 +175,9 @@ export async function chooseIdentity(formData: FormData) {
   }
 
   await clearVerifiedHouseholds();
-  await claimProfile(person.id, proven);
+  const claimed = await claimProfile(person.id, proven);
   await clearGoogleEmail();
-  await setSession(null, person.id);
+  await setSession(null, claimed);
   redirect("/");
 }
 
@@ -209,7 +210,7 @@ export async function switchToHouseholdMember(personId: string) {
     redirect("/me");
   }
 
-  await setSession(session.email, target.id);
+  await setSession(session.email, target);
   revalidatePath("/", "layout");
   redirect("/me?saved=switched");
 }
@@ -223,13 +224,19 @@ export interface AdminState {
  * ADMIN_ACCESS_CODE environment variable. Without this the live site would
  * hand full admin rights to anyone who tapped the button.
  *
- * Retired entirely once Google sign-in is connected, at which point admin
- * status comes from the committee's own Google accounts.
+ * Closed on the live site (COMMITTEE_CODE_SIGN_IN in lib/signin.ts): admin
+ * status now comes from the committee's own Google accounts. The check here,
+ * not just the hidden form, is what closes it — a server action can be called
+ * without the page that renders its form.
  */
 export async function signInAsAdmin(
   _prev: AdminState,
   formData: FormData
 ): Promise<AdminState> {
+  if (!COMMITTEE_CODE_SIGN_IN) {
+    return { error: "Committee members sign in with Google." };
+  }
+
   const rate = await checkSignInRate();
   if (!rate.allowed) {
     return {
@@ -258,7 +265,7 @@ export async function signInAsAdmin(
   const email = db.admins[0];
   const linked = db.people.find((p) => p.claimedByEmail === email) ?? null;
 
-  await setSession(email, linked?.id ?? null);
+  await setSession(email, linked);
   redirect("/");
 }
 
