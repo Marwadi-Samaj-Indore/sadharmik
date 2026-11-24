@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { getDb, savePerson } from "@/lib/db";
 import {
   clearGoogleEmail,
@@ -41,6 +42,22 @@ async function claimProfile(personId: string, email: string | null) {
     ...person,
     claimedByEmail: email ?? MOBILE_ONLY,
   });
+}
+
+/**
+ * True when this profile already belongs to a different Google account.
+ *
+ * The mobile number is an introduction, not proof: numbers are printed in the
+ * samaj's book. Before this check, anyone with a Google account and a member's
+ * number could sign in AS that member even after the member had linked their
+ * own Google address — the claim was left alone but the session was still
+ * handed over. A profile linked to someone else's address is now out of reach
+ * by number; its owner signs in with their own Google account.
+ */
+function linkedElsewhere(person: { claimedByEmail: string | null }, proven: string | null) {
+  const claim = person.claimedByEmail;
+  if (!claim || claim === MOBILE_ONLY) return false;
+  return claim.toLowerCase() !== (proven ?? "").toLowerCase();
 }
 
 export interface VerifyState {
@@ -101,7 +118,18 @@ export async function verifyMobile(
   // living there — spouse, parents, children — should be able to sign in
   // with it and then pick which of them they are.
   const householdIds = new Set(directMatches.map((p) => p.householdId));
-  const matches = db.people.filter((p) => householdIds.has(p.householdId));
+  const proven = await googleEmail();
+  const matches = db.people.filter(
+    (p) => householdIds.has(p.householdId) && !p.deceased && !linkedElsewhere(p, proven)
+  );
+
+  if (matches.length === 0) {
+    await recordFailedSignIn();
+    return {
+      error:
+        "Everyone on this number has already linked a Google account. If one of them is you, sign in with that Google account instead, or ask a committee member.",
+    };
+  }
 
   if (matches.length > 1) {
     // The pick happens in a later request, so leave proof of THIS step with
@@ -117,7 +145,6 @@ export async function verifyMobile(
     };
   }
 
-  const proven = await googleEmail();
   await claimProfile(matches[0].id, proven);
   await clearGoogleEmail();
   await setSession(null, matches[0].id);
@@ -140,12 +167,12 @@ export async function chooseIdentity(formData: FormData) {
   const personId = String(formData.get("personId") ?? "");
   const db = await getDb();
   const person = db.people.find((p) => p.id === personId);
-  if (!person || !verified.has(person.householdId)) {
+  const proven = await googleEmail();
+  if (!person || !verified.has(person.householdId) || linkedElsewhere(person, proven)) {
     await recordFailedSignIn();
     redirect("/verify");
   }
 
-  const proven = await googleEmail();
   await clearVerifiedHouseholds();
   await claimProfile(person.id, proven);
   await clearGoogleEmail();
@@ -219,7 +246,10 @@ export async function signInAsAdmin(
   }
 
   const supplied = String(formData.get("code") ?? "").trim();
-  if (supplied !== expected) {
+  // Compared as fixed-length digests in constant time, so response timing
+  // reveals nothing about how much of a guess was right
+  const digest = (v: string) => createHash("sha256").update(v).digest();
+  if (!timingSafeEqual(digest(supplied), digest(expected))) {
     await recordFailedSignIn();
     return { error: "That code is not correct." };
   }

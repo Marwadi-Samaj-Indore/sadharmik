@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
 import { AlertCircle } from "lucide-react";
 import { ICON } from "@/lib/icons";
 
@@ -17,6 +16,15 @@ import { ICON } from "@/lib/icons";
  * The anon key used here is public by design: with RLS on and no policies, it
  * can read nothing. It is only the ticket to Supabase's auth endpoint.
  */
+/**
+ * The Supabase client is ~70 KB and is needed only for the moment the button
+ * is pressed, so it is fetched then rather than with the page: the sign-in
+ * screen is the first thing every member loads, often on mobile data.
+ * Pressing down starts the download, so it has usually arrived by the time
+ * the tap completes.
+ */
+const loadSupabase = () => import("@supabase/ssr");
+
 export function GoogleSignIn() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -33,6 +41,7 @@ export function GoogleSignIn() {
       return;
     }
 
+    const { createBrowserClient } = await loadSupabase();
     const supabase = createBrowserClient(url, anonKey);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -50,6 +59,7 @@ export function GoogleSignIn() {
     <>
       <button
         type="button"
+        onPointerDown={() => void loadSupabase()}
         onClick={signIn}
         disabled={pending}
         className="btn btn-primary w-full"

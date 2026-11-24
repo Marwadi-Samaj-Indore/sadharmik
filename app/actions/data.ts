@@ -25,6 +25,7 @@ import { actorName, canEdit, getSession } from "@/lib/session";
 import { removeImage, storeFile, storeImage } from "@/lib/storage";
 import { safeReturnTo, withSavedFlag } from "@/lib/nav";
 import {
+  cleanUrl,
   householdIssueSettled,
   isStoredPath,
   personIssueSettled,
@@ -39,7 +40,9 @@ import type {
   Post,
 } from "@/lib/types";
 
-const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim();
+// Capped so no single field can bloat the directory every page loads in full;
+// 4,000 characters is far beyond any real address, note or post
+const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim().slice(0, 4000);
 const bool = (fd: FormData, key: string) => fd.get(key) === "on";
 const digits = (fd: FormData, key: string) =>
   String(fd.get(key) ?? "").replace(/\D/g, "").slice(-10) || null;
@@ -103,8 +106,12 @@ export async function updatePerson(personId: string, formData: FormData) {
   if (submittedCard.startsWith("data:image/")) {
     visitingCard = await storeImage(submittedCard, { personId, kind: "card" });
     obsolete.push(before.business.visitingCard);
-  } else if (submittedCard) {
-    visitingCard = submittedCard; // unchanged — already a stored path
+  } else if (submittedCard && submittedCard === before.business.visitingCard) {
+    // Kept only if it is the card already on this profile. Anything else — a
+    // path to someone else's file, an outside URL — is refused: accepted, it
+    // let a member point their card at another member's biodata and then
+    // delete that file by clearing their own card.
+    visitingCard = submittedCard;
   } else {
     obsolete.push(before.business.visitingCard);
   }
@@ -116,7 +123,7 @@ export async function updatePerson(personId: string, formData: FormData) {
     keywords: text(formData, "businessKeywords"),
     address: text(formData, "businessAddress"),
     phone: text(formData, "businessPhone"),
-    website: text(formData, "businessWebsite"),
+    website: cleanUrl(text(formData, "businessWebsite")),
     instagram: text(formData, "businessInstagram"),
     visitingCard,
   };
@@ -278,7 +285,7 @@ export async function updateHousehold(householdId: string, formData: FormData) {
   household.pincode = text(formData, "pincode");
   household.gotra = text(formData, "gotra");
   household.nativePlace = text(formData, "nativePlace");
-  household.mapsUrl = text(formData, "mapsUrl");
+  household.mapsUrl = cleanUrl(text(formData, "mapsUrl"));
   household.anniversary = text(formData, "anniversary") || null;
 
   await saveHousehold(household);

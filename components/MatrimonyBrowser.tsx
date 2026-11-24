@@ -15,6 +15,8 @@ export interface MatchRow {
   avatarLabel: string;
   photo: string | null;
   age: number;
+  /** `age` is the start of a five-year band (birth year hidden) */
+  ageBand: boolean;
   education: string;
   occupation: string;
   area: string;
@@ -369,7 +371,7 @@ export function MatrimonyBrowser({
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-serif text-base font-semibold">{r.name}</p>
                   <p className="truncate text-xs text-ink-soft">
-                    {[`${r.age} yrs`, r.education, r.livingIn || r.area].filter(Boolean).join(" · ")}
+                    {[r.ageBand ? `${r.age}–${r.age + 4} yrs` : `${r.age} yrs`, r.education, r.livingIn || r.area].filter(Boolean).join(" · ")}
                   </p>
                   {(r.gotra || r.nativePlace) && (
                     <span className="mt-1 flex flex-wrap gap-1">

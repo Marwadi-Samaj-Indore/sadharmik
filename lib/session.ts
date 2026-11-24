@@ -98,6 +98,9 @@ export async function setSession(email: string | null, personId: string | null) 
   const jar = await cookies();
   const options = {
     httpOnly: true,
+    // HTTPS-only in production, so a session can never travel in clear text;
+    // left off locally because http://localhost would refuse to store it
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
     path: "/",
     maxAge: 60 * 60 * 24 * 90,
@@ -131,6 +134,7 @@ export async function grantVerifiedHouseholds(householdIds: string[]) {
   const payload = `${householdIds.join(",")}|${Date.now() + VERIFY_WINDOW_MS}`;
   jar.set(VERIFY_COOKIE, signed(payload), {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: Math.ceil(VERIFY_WINDOW_MS / 1000),
@@ -168,6 +172,7 @@ export async function grantGoogleEmail(email: string) {
   const payload = `${email}|${Date.now() + GOOGLE_WINDOW_MS}`;
   jar.set(GOOGLE_COOKIE, signed(payload), {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: Math.ceil(GOOGLE_WINDOW_MS / 1000),

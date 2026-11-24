@@ -94,6 +94,31 @@ the service-role key and permission checks live in our code (`canEdit` in
 import them, or types from them, into a client component (`Theme` lives in
 `lib/types.ts` for that reason).
 
+### Security rules (audit of 24 Nov 2026 — keep these true)
+
+- **`middleware.ts` is the sign-in gate**, not the `(main)` layout. A layout check can
+  be skipped: a crafted RSC request (`RSC: 1` + a forged `Next-Router-State-Tree`)
+  rendered /directory to a visitor with no cookie. Middleware verifies the HMAC on
+  `sdm_person`/`sdm_email` with Web Crypto before anything renders. A new public page
+  must be added to its `PUBLIC` list deliberately; everything else is gated.
+- **The mobile number is an introduction, not proof.** `verifyMobile`/`chooseIdentity`
+  refuse a profile already claimed by a different Google address (`linkedElsewhere`).
+- **Uploads are raster images or PDF only** (`storeImage`/`storeFile`). Never accept
+  `image/svg+xml`. `/api/photo` serves only those types, with `nosniff`, and a
+  `sandbox` CSP for images (not PDFs — Chrome won't render a sandboxed PDF); it is
+  excluded from the site-wide headers in `next.config.mjs` so it can set its own.
+- **The visiting-card field keeps only its existing stored path**; any other
+  non-upload value is dropped (it once let a member delete another member's file).
+- **Every member-typed link goes through `cleanUrl`** on save and on render.
+- **Hidden means absent from the page**, not just not displayed: anything passed to a
+  client component is in the page source (hidden mobiles once sat in the Directory's
+  search text). A hidden birth year also hides the age; Matrimony sends a 5-year band.
+- CSV export prefixes `= + - @` cells with `'`. Session cookies are `secure` in
+  production. The committee code is compared as SHA-256 digests in constant time.
+  The callback only accepts a Google identity.
+- Remaining by choice: the sign-in rate limit is in memory per instance; `xlsx` and
+  Next's bundled `postcss` carry advisories but only touch our own files.
+
 ### Auth
 
 **Two flags in `lib/signin.ts`.** `GOOGLE_SIGN_IN` shows the Google button — on since

@@ -16,7 +16,7 @@ import { getSession } from "@/lib/session";
 import { BackBar, Badge } from "@/components/ui";
 import { RemoveMeetingButton } from "@/components/RemoveMeetingButton";
 import { RsvpCard } from "@/components/RsvpCard";
-import { formatDateLong, formatTime, photoUrl } from "@/lib/util";
+import { cleanUrl, formatDateLong, formatTime, photoUrl } from "@/lib/util";
 import { ICON } from "@/lib/icons";
 
 export default async function MeetingDetailPage({
@@ -82,7 +82,7 @@ export default async function MeetingDetailPage({
 
         {meeting.mapsUrl && (
           <a
-            href={meeting.mapsUrl}
+            href={cleanUrl(meeting.mapsUrl)}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-secondary mt-4 w-full"
@@ -100,7 +100,7 @@ export default async function MeetingDetailPage({
 
         {meeting.kwikPicUrl && (
           <a
-            href={meeting.kwikPicUrl}
+            href={cleanUrl(meeting.kwikPicUrl)}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary mt-5 w-full"
@@ -115,7 +115,7 @@ export default async function MeetingDetailPage({
             a place to go and look through, not the photos themselves. */}
         {meeting.driveUrl && (
           <a
-            href={meeting.driveUrl}
+            href={cleanUrl(meeting.driveUrl)}
             target="_blank"
             rel="noopener noreferrer"
             className={`btn btn-secondary w-full ${meeting.kwikPicUrl ? "mt-2.5" : "mt-5"}`}

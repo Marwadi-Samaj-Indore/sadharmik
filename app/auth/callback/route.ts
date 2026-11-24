@@ -53,7 +53,13 @@ export async function GET(request: Request) {
   });
 
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-  const email = data?.user?.email?.toLowerCase() ?? null;
+  // Only a Google-verified address counts. Admin rights hang off the email, so
+  // an address arriving through any other Supabase provider (email sign-up is
+  // on by default) must never be taken at its word.
+  const fromGoogle =
+    data?.user?.app_metadata?.provider === "google" ||
+    Boolean(data?.user?.identities?.some((i) => i.provider === "google"));
+  const email = fromGoogle ? data?.user?.email?.toLowerCase() ?? null : null;
 
   // Supabase is asked not to return users without an address, but a provider
   // that misbehaves must not become an anonymous way in

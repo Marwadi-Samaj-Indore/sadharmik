@@ -22,6 +22,7 @@ import { categorySlug } from "@/lib/categories";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { ICON } from "@/lib/icons";
 import {
+  cleanUrl,
   ageFrom,
   displayPhone,
   formatDate,
@@ -57,7 +58,9 @@ export default async function PersonPage({
   const { privacy } = person;
   const mobile = privacy.hideMobile ? null : person.mobile;
   const whatsapp = privacy.hideWhatsapp ? null : person.whatsapp;
-  const age = ageFrom(person.dob) ?? person.age;
+  // An exact age plus the day and month gives the year away, so a member who
+  // hid their birth year has their age hidden too
+  const age = privacy.hideDobYear ? null : ageFrom(person.dob) ?? person.age;
   const editable = canEdit(session, person);
   const hasBusiness = Boolean(
     person.business.name ||
@@ -319,7 +322,7 @@ export default async function PersonPage({
                 <DetailRow
                   label="Website"
                   value={person.business.website}
-                  href={person.business.website}
+                  href={cleanUrl(person.business.website) || undefined}
                   icon={<Globe size={ICON.sm} />}
                 />
               )}

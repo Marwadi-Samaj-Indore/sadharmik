@@ -94,7 +94,10 @@ export default async function MatrimonyPage({
         name: shortName(p),
         avatarLabel: initials(p),
         photo: p.privacy.hidePhoto ? null : p.photo,
-        age: ageOf(p) ?? 0,
+        // Hidden birth year: only the five-year band travels to the phone, so
+        // the exact age (and with it the year) can't be read from the page
+        age: p.privacy.hideDobYear ? Math.floor((ageOf(p) ?? 0) / 5) * 5 : ageOf(p) ?? 0,
+        ageBand: p.privacy.hideDobYear,
         education: p.education,
         occupation: p.occupationType,
         area: household?.area ?? "",

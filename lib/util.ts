@@ -168,6 +168,20 @@ export function photoUrl(value: string | null | undefined): string | null {
 export const isUrl = (value: string) => /^https?:\/\//i.test(value.trim());
 
 /**
+ * A link a member typed, made safe to put in an href: an http(s) address as
+ * given, a bare domain ("shahtraders.in") with https:// added, and anything
+ * else — data:, javascript:, a sentence — dropped. Used both when saving and
+ * when rendering, so values stored before this existed are covered too.
+ */
+export function cleanUrl(value: string | null | undefined): string {
+  const v = (value ?? "").trim();
+  if (!v) return "";
+  if (/^https?:\/\/[^\s]+$/i.test(v)) return v.slice(0, 500);
+  if (/^[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s]*)?$/i.test(v)) return `https://${v}`.slice(0, 500);
+  return "";
+}
+
+/**
  * A condolence notice is an announcement whose category is "Condolence" —
  * the one announcement kind that must never share the feed's celebratory
  * visual language. The kind lives in the existing category field (unused on
@@ -182,7 +196,7 @@ export const whatsappLink = (phone: string, message?: string) =>
   `https://wa.me/91${phone}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
 
 export const mapsLink = (household: Household) =>
-  household.mapsUrl ||
+  cleanUrl(household.mapsUrl) ||
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     [household.address, household.area, household.city].filter(Boolean).join(", ")
   )}`;

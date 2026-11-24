@@ -35,7 +35,9 @@ export default async function DirectoryPage() {
         ...members.map((p) => p.business.name),
         ...members.map((p) => p.business.category),
         ...members.map((p) => p.business.keywords),
-        ...members.map((p) => p.mobile ?? ""),
+        // A hidden number must not travel in the page at all: anything here is
+        // readable in the page source, searchable or not
+        ...members.map((p) => (p.privacy.hideMobile ? "" : p.mobile ?? "")),
       ]
         .filter(Boolean)
         .join(" "),
@@ -70,7 +72,7 @@ export default async function DirectoryPage() {
           p.occupationType,
           p.education,
           p.livingIn,
-          p.mobile ?? "",
+          p.privacy.hideMobile ? "" : p.mobile ?? "",
         ]
           .filter(Boolean)
           .join(" "),

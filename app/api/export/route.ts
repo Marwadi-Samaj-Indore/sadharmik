@@ -28,7 +28,11 @@ export async function GET() {
   ];
 
   const escape = (value: unknown) => {
-    const text = value === null || value === undefined ? "" : String(value);
+    let text = value === null || value === undefined ? "" : String(value);
+    // Members write some of these fields themselves. A cell starting with
+    // = + - @ (or a tab or return) is run as a formula when Excel opens the
+    // file, so it is prefixed with ' to keep it plain text.
+    if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
     return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   };
 

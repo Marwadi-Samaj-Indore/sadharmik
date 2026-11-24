@@ -15,7 +15,7 @@ import {
 import { actorName, getSession } from "@/lib/session";
 import { removeImage, storeFile } from "@/lib/storage";
 import { withSavedFlag } from "@/lib/nav";
-import { shortName } from "@/lib/util";
+import { cleanUrl, shortName } from "@/lib/util";
 import type { Meeting } from "@/lib/types";
 
 const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim();
@@ -40,13 +40,13 @@ export async function createMeeting(formData: FormData) {
     title: title.slice(0, 120),
     description: text(formData, "description").slice(0, 1000),
     location: text(formData, "location").slice(0, 160),
-    mapsUrl: text(formData, "mapsUrl") || null,
+    mapsUrl: cleanUrl(text(formData, "mapsUrl")) || null,
     organisers: text(formData, "organisers").slice(0, 300),
     meetingDate,
     meetingTime: text(formData, "meetingTime").slice(0, 60),
     photo,
-    kwikPicUrl: text(formData, "kwikPicUrl").slice(0, 300) || null,
-    driveUrl: text(formData, "driveUrl").slice(0, 500) || null,
+    kwikPicUrl: cleanUrl(text(formData, "kwikPicUrl")).slice(0, 300) || null,
+    driveUrl: cleanUrl(text(formData, "driveUrl")) || null,
     authorName: session.person ? shortName(session.person) : "Samaj Karyakarini",
     authorEmail: session.email,
     createdAt: new Date().toISOString(),
@@ -82,12 +82,12 @@ export async function updateMeeting(meetingId: string, formData: FormData) {
   meeting.title = title.slice(0, 120);
   meeting.description = text(formData, "description").slice(0, 1000);
   meeting.location = text(formData, "location").slice(0, 160);
-  meeting.mapsUrl = text(formData, "mapsUrl") || null;
+  meeting.mapsUrl = cleanUrl(text(formData, "mapsUrl")) || null;
   meeting.organisers = text(formData, "organisers").slice(0, 300);
   meeting.meetingDate = meetingDate;
   meeting.meetingTime = text(formData, "meetingTime").slice(0, 60);
-  meeting.kwikPicUrl = text(formData, "kwikPicUrl").slice(0, 300) || null;
-  meeting.driveUrl = text(formData, "driveUrl").slice(0, 500) || null;
+  meeting.kwikPicUrl = cleanUrl(text(formData, "kwikPicUrl")).slice(0, 300) || null;
+  meeting.driveUrl = cleanUrl(text(formData, "driveUrl")) || null;
 
   // The replaced cover is deleted only after the save lands — a failed save
   // must leave an orphaned file, not a meeting pointing at a deleted one

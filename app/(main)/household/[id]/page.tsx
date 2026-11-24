@@ -110,7 +110,8 @@ export default async function HouseholdPage({
         <SectionHeading>Family members</SectionHeading>
         <ul className="mx-4 space-y-2">
           {members.map((person) => {
-            const age = ageFrom(person.dob) ?? person.age;
+            // Hidden with the birth year it would otherwise reveal
+            const age = person.privacy.hideDobYear ? null : ageFrom(person.dob) ?? person.age;
             return (
               <li key={person.id}>
                 <FlipLink

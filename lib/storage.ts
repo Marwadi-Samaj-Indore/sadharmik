@@ -25,6 +25,12 @@ function decodeDataUrl(dataUrl: string) {
   return { contentType: match[1], bytes: Buffer.from(match[2], "base64") };
 }
 
+const IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+};
+
 const EXTENSIONS: Record<string, string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
@@ -76,7 +82,11 @@ export async function storeImage(
   const decoded = decodeDataUrl(incoming);
   if (!decoded) return null;
 
-  const extension = decoded.contentType === "image/png" ? "png" : "jpg";
+  // Raster formats only. An SVG is a document that can carry script; served
+  // back from our own origin it would run as whoever opened it — an admin,
+  // say — so "image/svg+xml" must never be stored, whatever the form claims.
+  const extension = IMAGE_EXTENSIONS[decoded.contentType];
+  if (!extension) throw new Error("Photos must be JPEG, PNG or WebP.");
   // Timestamped so a replaced photo never serves from a stale browser cache
   const path = `people/${personId}/${kind}-${Date.now()}.${extension}`;
 
