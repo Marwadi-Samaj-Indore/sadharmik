@@ -15,12 +15,14 @@ import {
   properCase,
   relationshipLabel,
 } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function HouseholdPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireMember();
   const { id } = await params;
   const [db, session] = await Promise.all([getDb(), getSession()]);
 

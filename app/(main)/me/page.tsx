@@ -20,8 +20,10 @@ import { PageTitle, Meter, SectionHeading, Badge, DetailRow } from "@/components
 import { SubmitButton } from "@/components/SubmitButton";
 import { completion, fullName, missingFields, relationshipLabel } from "@/lib/util";
 import { ICON } from "@/lib/icons";
+import { requireMember } from "@/lib/guard";
 
 export default async function MePage() {
+  await requireMember();
   const [db, session, theme] = await Promise.all([
     getDb(),
     getSession(),

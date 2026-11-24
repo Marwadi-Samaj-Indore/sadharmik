@@ -5,12 +5,14 @@ import { BackBar } from "@/components/ui";
 import { MeetingForm } from "@/components/MeetingForm";
 import { updateMeeting } from "@/app/actions/meetings";
 import { photoUrl } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function EditMeetingPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireMember();
   const { id } = await params;
   const [db, session] = await Promise.all([getDb(), getSession()]);
   if (!session.isAdmin) redirect(`/feed/meetings/${id}`);

@@ -16,12 +16,14 @@ import {
   whatsappLink,
   initials,
 } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function PostPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireMember();
   const { id } = await params;
   const [db, session] = await Promise.all([getDb(), getSession()]);
 

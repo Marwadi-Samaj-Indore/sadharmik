@@ -6,8 +6,10 @@ import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { BackBar, EmptyState } from "@/components/ui";
 import { AvatarLite } from "@/components/Avatar";
+import { requireMember } from "@/lib/guard";
 
 export default async function CommitteeAdminPage() {
+  await requireMember();
   const [db, session] = await Promise.all([getDb(), getSession()]);
   if (!session.isAdmin) redirect("/me");
 

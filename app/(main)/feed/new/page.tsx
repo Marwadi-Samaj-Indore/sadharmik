@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { BackBar } from "@/components/ui";
 import { NewPostForm } from "./NewPostForm";
+import { requireMember } from "@/lib/guard";
 
 /**
  * Two screens sharing one route. An announcement and a requirement are
@@ -15,6 +16,7 @@ export default async function NewPostPage({
 }: {
   searchParams: Promise<{ type?: string }>;
 }) {
+  await requireMember();
   const [db, session, { type }] = await Promise.all([
     getDb(),
     getSession(),

@@ -6,8 +6,10 @@ import {
   type PersonRow,
 } from "@/components/DirectoryBrowser";
 import { fullName, initials, relationshipLabel } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function DirectoryPage() {
+  await requireMember();
   const db = await getDb();
 
   const householdById = new Map(db.households.map((h) => [h.id, h]));

@@ -18,12 +18,14 @@ import { RemoveMeetingButton } from "@/components/RemoveMeetingButton";
 import { RsvpCard } from "@/components/RsvpCard";
 import { cleanUrl, formatDateLong, formatTime, photoUrl } from "@/lib/util";
 import { ICON } from "@/lib/icons";
+import { requireMember } from "@/lib/guard";
 
 export default async function MeetingDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireMember();
   const { id } = await params;
   const [db, session] = await Promise.all([getDb(), getSession()]);
 

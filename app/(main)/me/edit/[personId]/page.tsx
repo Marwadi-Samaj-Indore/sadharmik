@@ -9,6 +9,7 @@ import { MaritalFields } from "@/components/MaritalFields";
 import { BUSINESS_CATEGORIES, OCCUPATION_TYPES, BLOOD_GROUPS } from "@/lib/categories";
 import { resolveReturnTo, returnLabel } from "@/lib/nav";
 import { fullName, initials, photoUrl, relationshipLabel } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function EditPersonPage({
   params,
@@ -17,6 +18,7 @@ export default async function EditPersonPage({
   params: Promise<{ personId: string }>;
   searchParams: Promise<{ from?: string }>;
 }) {
+  await requireMember();
   const [{ personId }, { from }] = await Promise.all([params, searchParams]);
   const [db, session] = await Promise.all([getDb(), getSession()]);
 

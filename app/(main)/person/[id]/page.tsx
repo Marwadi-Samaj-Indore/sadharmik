@@ -33,6 +33,7 @@ import {
   telLink,
   whatsappLink,
 } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function PersonPage({
   params,
@@ -41,6 +42,7 @@ export default async function PersonPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 }) {
+  await requireMember();
   const [{ id }, { from }] = await Promise.all([params, searchParams]);
   // Opened from the matrimony list: Back returns to that list (by history,
   // so its filters survive), not to the person's family page

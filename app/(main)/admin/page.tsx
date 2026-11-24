@@ -19,6 +19,7 @@ import { ResolveIssueButton, UndoButton } from "@/components/AdminActions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { completion, fullName, relativeTime, whatsappLink } from "@/lib/util";
 import { ICON } from "@/lib/icons";
+import { requireMember } from "@/lib/guard";
 
 const KIND_LABEL: Record<string, string> = {
   unreadable: "Damaged by Excel",
@@ -41,6 +42,7 @@ const KIND_ORDER = [
 ];
 
 export default async function AdminPage() {
+  await requireMember();
   const [db, session, changes] = await Promise.all([
     getDb(),
     getSession(),

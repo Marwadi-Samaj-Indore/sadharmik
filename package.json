@@ -8,7 +8,7 @@
     "start": "next start -p 3310",
     "import": "node scripts/import.mjs",
     "migrate": "node --env-file=.env.local scripts/migrate-to-supabase.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && node scripts/check-guards.mjs",
     "sql": "node scripts/combine-sql.mjs",
     "check:setup": "node --env-file=.env.local scripts/check-setup.mjs"
   },

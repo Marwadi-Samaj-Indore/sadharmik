@@ -3,8 +3,10 @@ import { getSession } from "@/lib/session";
 import { BackBar } from "@/components/ui";
 import { CommitteeMemberForm } from "@/components/CommitteeMemberForm";
 import { createCommitteeMember } from "@/app/actions/committee";
+import { requireMember } from "@/lib/guard";
 
 export default async function NewCommitteeMemberPage() {
+  await requireMember();
   const session = await getSession();
   if (!session.isAdmin) redirect("/me");
 

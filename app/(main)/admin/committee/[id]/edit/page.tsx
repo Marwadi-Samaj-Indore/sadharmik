@@ -6,12 +6,14 @@ import { CommitteeMemberForm } from "@/components/CommitteeMemberForm";
 import { RemoveCommitteeMemberButton } from "@/components/RemoveCommitteeMemberButton";
 import { updateCommitteeMember } from "@/app/actions/committee";
 import { photoUrl } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function EditCommitteeMemberPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireMember();
   const { id } = await params;
   const [db, session] = await Promise.all([getDb(), getSession()]);
   if (!session.isAdmin) redirect("/me");

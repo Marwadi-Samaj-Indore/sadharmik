@@ -5,6 +5,7 @@ import { addFamilyMember } from "@/app/actions/data";
 import { BackBar } from "@/components/ui";
 import { SaveBar } from "@/components/SaveBar";
 import { resolveReturnTo, returnLabel } from "@/lib/nav";
+import { requireMember } from "@/lib/guard";
 
 export default async function AddFamilyMemberPage({
   params,
@@ -13,6 +14,7 @@ export default async function AddFamilyMemberPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 }) {
+  await requireMember();
   const [{ id }, { from }] = await Promise.all([params, searchParams]);
   const [db, session] = await Promise.all([getDb(), getSession()]);
 

@@ -14,6 +14,7 @@ import {
   relativeTime,
 } from "@/lib/util";
 import { ICON } from "@/lib/icons";
+import { requireMember } from "@/lib/guard";
 
 /**
  * "Rajesh-Sunita Shah" → "RS". A committee entry is a couple, so a single
@@ -28,6 +29,7 @@ function monogram(name: string): string {
 }
 
 export default async function HomePage() {
+  await requireMember();
   const [db, session] = await Promise.all([getDb(), getSession()]);
 
   // The committee's week ahead. Worked out only for admins: members never

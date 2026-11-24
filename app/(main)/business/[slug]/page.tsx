@@ -9,12 +9,14 @@ import { BackBar, EmptyState, Badge } from "@/components/ui";
 import { categoryFromSlug } from "@/lib/categories";
 import { fullName, telLink, whatsappLink } from "@/lib/util";
 import { ICON } from "@/lib/icons";
+import { requireMember } from "@/lib/guard";
 
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await requireMember();
   const { slug } = await params;
   const category = categoryFromSlug(slug);
   if (!category) notFound();

@@ -7,6 +7,7 @@ import { MatrimonyBrowser, type MatchRow } from "@/components/MatrimonyBrowser";
 import { ageFrom, initials, shortName } from "@/lib/util";
 import { ICON } from "@/lib/icons";
 import type { Person } from "@/lib/types";
+import { requireMember } from "@/lib/guard";
 
 /**
  * Matrimony: unmarried members of the samaj, as possible matches.
@@ -31,6 +32,7 @@ export default async function MatrimonyPage({
 }: {
   searchParams: Promise<{ for?: string }>;
 }) {
+  await requireMember();
   const { for: lookingFor } = await searchParams;
   const choice = lookingFor === "boy" || lookingFor === "girl" ? LOOKING[lookingFor] : null;
 

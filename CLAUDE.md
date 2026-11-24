@@ -63,7 +63,7 @@ the owner, who is not a developer. `README.md` is in the same register.
 |---|---|
 | `npm run dev` | Dev server on port **3310** (PMConnect uses 3210; both can run at once) |
 | `npm run build` | Production build |
-| `npm run typecheck` | Typecheck the app — there is no lint script. `tsconfig.scripts.json` is kept for the test suite; when `scripts/check-logic.ts` returns, add `&& tsc -p tsconfig.scripts.json` back, as PMConnect has |
+| `npm run typecheck` | Typecheck the app, then check every (main) page calls `requireMember()` — there is no lint script. `tsconfig.scripts.json` is kept for the test suite; when `scripts/check-logic.ts` returns, add `&& tsc -p tsconfig.scripts.json` back, as PMConnect has |
 | `npm run import -- "<file>.xlsx"` | Reads a spreadsheet (entry sheet or Book 2, the default) into `.data/db.json`; prints counts only. `--dry-run` writes nothing |
 | `npm run migrate` | Pushes `.data/db.json` into Supabase (upserts) |
 
@@ -96,11 +96,14 @@ import them, or types from them, into a client component (`Theme` lives in
 
 ### Security rules (audit of 24 Nov 2026 — keep these true)
 
-- **`middleware.ts` is the sign-in gate**, not the `(main)` layout. A layout check can
-  be skipped: a crafted RSC request (`RSC: 1` + a forged `Next-Router-State-Tree`)
-  rendered /directory to a visitor with no cookie. Middleware verifies the HMAC on
-  `sdm_person`/`sdm_email` with Web Crypto before anything renders. A new public page
-  must be added to its `PUBLIC` list deliberately; everything else is gated.
+- **Every page under `app/(main)` calls `await requireMember()` first** (`lib/guard.ts`).
+  The `(main)` layout's check alone is not a gate: a crafted RSC request (`RSC: 1` + a
+  forged `Next-Router-State-Tree`) rendered /directory to a visitor with no cookie
+  (24 Nov 2026). `npm run typecheck` runs `scripts/check-guards.mjs`, which fails if a
+  page lacks the call. Middleware would be the natural single gate, but with Next.js
+  15.5.29 ANY `middleware.ts` (edge or nodejs runtime) made the Vercel deployment fail
+  while building fine locally — bisected on preview branches; the build log wasn't
+  readable. Retry middleware on a preview branch after the next Next.js update.
 - **The mobile number is an introduction, not proof.** `verifyMobile`/`chooseIdentity`
   refuse a profile already claimed by a different Google address (`linkedElsewhere`).
 - **Uploads are raster images or PDF only** (`storeImage`/`storeFile`). Never accept

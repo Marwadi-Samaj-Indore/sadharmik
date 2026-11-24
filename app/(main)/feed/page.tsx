@@ -30,6 +30,7 @@ import {
 } from "@/lib/util";
 import { ICON } from "@/lib/icons";
 import type { Post } from "@/lib/types";
+import { requireMember } from "@/lib/guard";
 
 type Tab =
   | "announcements"
@@ -43,6 +44,7 @@ export default async function FeedPage({
 }: {
   searchParams: Promise<{ tab?: string; limit?: string }>;
 }) {
+  await requireMember();
   const { tab, limit } = await searchParams;
   const active: Tab =
     tab === "circulars"

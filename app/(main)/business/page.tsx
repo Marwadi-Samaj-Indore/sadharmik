@@ -7,8 +7,10 @@ import {
 } from "@/components/BusinessBrowser";
 import { BUSINESS_CATEGORIES, categoryRank, categorySlug } from "@/lib/categories";
 import { fullName, initials } from "@/lib/util";
+import { requireMember } from "@/lib/guard";
 
 export default async function BusinessPage() {
+  await requireMember();
   const db = await getDb();
   const householdById = new Map(db.households.map((h) => [h.id, h]));
 
