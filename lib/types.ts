@@ -267,3 +267,42 @@ export interface Database {
   meetingRsvps: MeetingRsvp[];
   committeeMembers: CommitteeMember[];
 }
+
+/* ------------------------------------------------------------ notifications */
+
+/** Every kind of thing the app tells members about. Labels live in lib/notify-kinds.ts. */
+export type NotificationKind =
+  | "announcement"
+  | "meeting"
+  | "circular"
+  | "requirement"
+  | "biodata"
+  | "comment"
+  | "profile";
+
+export interface AppNotification {
+  id: string;
+  /** Owner key of the one member it is for; null for everyone */
+  recipient: string | null;
+  kind: NotificationKind;
+  title: string;
+  body: string;
+  /** A path inside the app */
+  url: string;
+  /** Owner key of whoever caused it */
+  actor: string | null;
+  createdAt: string;
+}
+
+export interface NotificationSettings {
+  owner: string;
+  seenAt: string | null;
+  muted: NotificationKind[];
+}
+
+export interface StoredPushSubscription {
+  endpoint: string;
+  owner: string;
+  p256dh: string;
+  auth: string;
+}

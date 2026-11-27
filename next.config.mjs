@@ -25,6 +25,9 @@ const nextConfig = {
       // Every route except the file route, which sets its own policy per file
       // type (a sandbox for images; Chrome refuses to show a sandboxed PDF)
       { source: "/((?!api/photo/).*)", headers: securityHeaders },
+      // Phones check for a new service worker on every visit; caching it
+      // would leave members running an old one for a day after a fix
+      { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache" }] },
     ];
   },
   // Member photos are user-uploaded and served from local storage in the

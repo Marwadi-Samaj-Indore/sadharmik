@@ -8,6 +8,7 @@ import {
   deleteCommentRow,
   deleteDemoPosts,
   deletePostRow,
+  deletePushSubscriptionsOf,
   getChangeLog,
   getDb,
   markChangeUndone,
@@ -24,6 +25,7 @@ import {
 import { actorName, canEdit, getSession } from "@/lib/session";
 import { removeImage, storeFile, storeImage } from "@/lib/storage";
 import { safeReturnTo, withSavedFlag } from "@/lib/nav";
+import { notify, ownerKey } from "@/lib/notify";
 import {
   cleanUrl,
   householdIssueSettled,
@@ -170,6 +172,19 @@ export async function updatePerson(personId: string, formData: FormData) {
     before,
     after: person,
   });
+
+  // Someone else changed your profile: you should hear about it. Only for a
+  // profile somebody has claimed; an unclaimed one has nobody to tell.
+  if (session.person?.id !== personId && existing.claimedByEmail) {
+    notify({
+      kind: "profile",
+      recipient: personId,
+      actor: ownerKey(session),
+      title: "Your profile was updated",
+      body: `${actorName(session)} made changes to your profile.`,
+      url: `/person/${personId}`,
+    });
+  }
 
   refresh();
   // Return to whichever screen opened the form, so the member stays in the
@@ -389,6 +404,24 @@ export async function createPost(formData: FormData) {
     after: post,
   });
 
+  notify(
+    type === "announcement"
+      ? {
+          kind: "announcement",
+          actor: ownerKey(session),
+          title: post.category === "Condolence" ? "Condolence" : "New announcement",
+          body: title,
+          url: `/feed/${post.id}`,
+        }
+      : {
+          kind: "requirement",
+          actor: ownerKey(session),
+          title: `${post.authorName} is looking for help`,
+          body: title,
+          url: `/feed/${post.id}`,
+        }
+  );
+
   refresh();
   redirect(`/feed/${post.id}`);
 }
@@ -413,6 +446,18 @@ export async function addComment(postId: string, formData: FormData) {
     body,
     createdAt: new Date().toISOString(),
   });
+
+  // Tell the post's author, unless they are replying on their own post
+  if (post.authorPersonId && post.authorPersonId !== session.person?.id) {
+    notify({
+      kind: "comment",
+      recipient: post.authorPersonId,
+      actor: ownerKey(session),
+      title: `${actorName(session)} commented on your post`,
+      body: body.length > 140 ? `${body.slice(0, 140)}…` : body,
+      url: `/feed/${postId}`,
+    });
+  }
 
   refresh();
 }
@@ -648,6 +693,10 @@ export async function setSignInLink(personId: string, formData: FormData) {
 
   const after = { ...before, claimedByEmail: typed || null };
   await savePerson(after);
+  // The old owner's phones must stop receiving this member's alerts too
+  if ((before.claimedByEmail ?? "") !== (after.claimedByEmail ?? "")) {
+    await deletePushSubscriptionsOf(personId);
+  }
   await appendChange({
     byEmail: session.email,
     byName: actorName(session),

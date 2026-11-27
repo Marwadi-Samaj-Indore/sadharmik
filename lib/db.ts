@@ -12,9 +12,13 @@ import type {
   Issue,
   Meeting,
   MeetingRsvp,
+  NotificationSettings,
   Person,
   Post,
+  StoredPushSubscription,
+  AppNotification,
 } from "./types";
+import { isNotificationKind } from "./notify-kinds";
 
 /**
  * THE ONLY FILE THAT TOUCHES THE DATABASE TABLES. The full storage boundary
@@ -619,6 +623,155 @@ export async function appendChange(
     undone: false,
   });
   fail("Could not record the change", error);
+}
+
+/* ------------------------------------------------------------ notifications */
+
+/**
+ * The notification tables arrived in migration 010. Until it has been run,
+ * reads return nothing and writes do nothing, so posting an announcement never
+ * fails just because the bell isn't set up yet.
+ */
+const tableMissing = (error: { message: string } | null) =>
+  Boolean(error && /schema cache|does not exist/i.test(error.message));
+
+function toNotification(row: any): AppNotification {
+  return {
+    id: row.id,
+    recipient: row.recipient ?? null,
+    kind: row.kind,
+    title: row.title,
+    body: blankToEmpty(row.body),
+    url: row.url || "/",
+    actor: row.actor ?? null,
+    createdAt: row.created_at,
+  };
+}
+
+export async function insertNotification(n: AppNotification) {
+  const { error } = await getSupabase().from("notifications").insert({
+    id: n.id,
+    recipient: n.recipient,
+    kind: n.kind,
+    title: n.title,
+    body: n.body,
+    url: n.url,
+    actor: n.actor,
+    created_at: n.createdAt,
+  });
+  if (tableMissing(error)) return false;
+  fail("Could not record the notification", error);
+  return true;
+}
+
+/**
+ * The last month of what this member can see: theirs and everyone's. Two
+ * plain queries rather than one `or()` filter, because that filter is a string
+ * and an owner key can be an email address, whose characters it would parse.
+ */
+export async function listNotifications(owner: string, limit = 60): Promise<AppNotification[]> {
+  const since = new Date(Date.now() - 30 * 86400000).toISOString();
+  const recent = () =>
+    getSupabase()
+      .from("notifications")
+      .select("*")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+  const [everyone, mine] = await Promise.all([
+    recent().is("recipient", null),
+    recent().eq("recipient", owner),
+  ]);
+  if (tableMissing(everyone.error)) return [];
+  fail("Could not read notifications", everyone.error ?? mine.error);
+  return [...(everyone.data ?? []), ...(mine.data ?? [])]
+    .map(toNotification)
+    .filter((n) => n.actor !== owner)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, limit);
+}
+
+function toSettings(row: any, owner: string): NotificationSettings {
+  return {
+    owner,
+    seenAt: row?.seen_at ?? null,
+    muted: ((row?.muted ?? []) as string[]).filter(isNotificationKind),
+  };
+}
+
+export async function getNotificationSettings(owner: string): Promise<NotificationSettings> {
+  const { data, error } = await getSupabase()
+    .from("notification_settings")
+    .select("*")
+    .eq("owner", owner)
+    .maybeSingle();
+  if (tableMissing(error)) return toSettings(null, owner);
+  fail("Could not read notification settings", error);
+  return toSettings(data, owner);
+}
+
+/** Everyone's settings at once, for deciding who a broadcast reaches. */
+export async function allNotificationSettings(): Promise<Map<string, NotificationSettings>> {
+  const { data, error } = await getSupabase().from("notification_settings").select("*");
+  if (tableMissing(error)) return new Map();
+  fail("Could not read notification settings", error);
+  return new Map((data ?? []).map((row: any) => [row.owner, toSettings(row, row.owner)]));
+}
+
+export async function saveNotificationSettings(
+  owner: string,
+  patch: { seenAt?: string; muted?: string[] }
+) {
+  const row: Record<string, unknown> = { owner };
+  if (patch.seenAt !== undefined) row.seen_at = patch.seenAt;
+  if (patch.muted !== undefined) row.muted = patch.muted;
+  const { error } = await getSupabase()
+    .from("notification_settings")
+    .upsert(row, { onConflict: "owner" });
+  if (tableMissing(error)) return;
+  fail("Could not save notification settings", error);
+}
+
+export async function listPushSubscriptions(owner?: string): Promise<StoredPushSubscription[]> {
+  let query = getSupabase().from("push_subscriptions").select("*");
+  if (owner) query = query.eq("owner", owner);
+  const { data, error } = await query;
+  if (tableMissing(error)) return [];
+  fail("Could not read push subscriptions", error);
+  return (data ?? []).map((row: any) => ({
+    endpoint: row.endpoint,
+    owner: row.owner,
+    p256dh: row.p256dh,
+    auth: row.auth,
+  }));
+}
+
+export async function savePushSubscription(sub: StoredPushSubscription) {
+  const { error } = await getSupabase().from("push_subscriptions").upsert(
+    {
+      endpoint: sub.endpoint,
+      owner: sub.owner,
+      p256dh: sub.p256dh,
+      auth: sub.auth,
+      created_at: new Date().toISOString(),
+    },
+    { onConflict: "endpoint" }
+  );
+  if (tableMissing(error)) throw new Error("Notifications are not set up yet.");
+  fail("Could not save the subscription", error);
+}
+
+export async function deletePushSubscription(endpoint: string) {
+  const { error } = await getSupabase().from("push_subscriptions").delete().eq("endpoint", endpoint);
+  if (tableMissing(error)) return;
+  fail("Could not remove the subscription", error);
+}
+
+/** Every phone of one owner: used when a profile's sign-in link changes hands. */
+export async function deletePushSubscriptionsOf(owner: string) {
+  const { error } = await getSupabase().from("push_subscriptions").delete().eq("owner", owner);
+  if (tableMissing(error)) return;
+  fail("Could not remove the subscriptions", error);
 }
 
 /* ------------------------------------------------------------------------ ids */

@@ -48,6 +48,10 @@ else pass("committee sign-in code set");
 const rawCodeLine = readFileSync(".env.local", "utf8").split("\n").find((l) => l.startsWith("ADMIN_ACCESS_CODE=")) ?? "";
 if (/#/.test(rawCodeLine.slice(18)) && !/^["'].*["']$/.test(rawCodeLine.slice(18).trim()))
   warn("ADMIN_ACCESS_CODE contains a # but isn't in quotes", "everything after the # is silently dropped — wrap the whole code in \"double quotes\"");
+const vapidPub = env.VAPID_PUBLIC_KEY ?? "", vapidPriv = env.VAPID_PRIVATE_KEY ?? "";
+if (!vapidPub && !vapidPriv) warn("phone notification keys are empty", "optional; without them the bell works but phones get no alerts (see .env.local.example)");
+else if (!/^[A-Za-z0-9_-]{80,90}$/.test(vapidPub) || !/^[A-Za-z0-9_-]{40,45}$/.test(vapidPriv)) fail("the phone notification keys don't look right", "make a fresh pair with: npx web-push generate-vapid-keys");
+else pass("phone notification keys set");
 if (!secret) warn("SESSION_SECRET is empty", "optional; without it the secret key signs the cookies instead");
 else pass("session secret set");
 
@@ -75,6 +79,10 @@ const r2 = await get("/rest/v1/admins?select=email", anon);
 if (r2.status === 200 && Array.isArray(r2.body) && r2.body.length > 0) fail("THE PUBLIC KEY CAN READ MEMBER DATA", "stop and tell me — the tables are not locked");
 else if (r2.status === 0) warn("skipped the public-key lock test", "network problem");
 else pass(`public key is locked out, as it must be (answer ${r2.status})`);
+
+const r4 = await get("/rest/v1/push_subscriptions?select=endpoint&limit=1", svc);
+if (r4.status === 200) pass("notification tables exist");
+else warn("notification tables not found", "run supabase/010-notifications.sql in the SQL Editor; until then the bell stays empty");
 
 const r3 = await get("/storage/v1/bucket/member-photos", svc);
 if (r3.status === 200 && r3.body?.public === false) pass("private photo bucket exists");

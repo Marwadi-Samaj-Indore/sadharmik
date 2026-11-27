@@ -6,6 +6,7 @@ import { appendChange, deleteCircular, getDb, newId, saveCircular } from "@/lib/
 import { actorName, getSession } from "@/lib/session";
 import { removeImage, storeFile } from "@/lib/storage";
 import { shortName } from "@/lib/util";
+import { notify, ownerKey } from "@/lib/notify";
 
 /**
  * Well under Vercel's 4.5MB ceiling on anything a function may receive, since
@@ -77,6 +78,13 @@ export async function uploadCircular(
     target: entry.title,
     before: null,
     after: entry,
+  });
+  notify({
+    kind: "circular",
+    actor: ownerKey(session),
+    title: "New circular",
+    body: entry.title,
+    url: "/feed?tab=circulars",
   });
 
   revalidatePath("/", "layout");

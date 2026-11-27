@@ -6,6 +6,7 @@ import { appendChange, deleteBiodata, getDb, newId, saveBiodata } from "@/lib/db
 import { actorName, getSession } from "@/lib/session";
 import { removeImage, storeFile } from "@/lib/storage";
 import { shortName } from "@/lib/util";
+import { notify, ownerKey } from "@/lib/notify";
 
 const MAX_BYTES = 6 * 1024 * 1024;
 
@@ -76,6 +77,14 @@ export async function uploadBiodata(
     target: entry.title,
     before: null,
     after: entry,
+  });
+  // Deliberately without the name: a lock screen is seen by whoever is nearby
+  notify({
+    kind: "biodata",
+    actor: ownerKey(session),
+    title: "New matrimonial biodata",
+    body: "A new biodata has been shared. Open the Matrimonial tab to see it.",
+    url: "/feed?tab=matrimonial",
   });
 
   revalidatePath("/", "layout");

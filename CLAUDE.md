@@ -163,6 +163,28 @@ reopened only by flipping `COMMITTEE_CODE_ON_LIVE_SITE` in `lib/signin.ts`.
 `.env` parsing treats `#` as a comment: a code containing `#` must be quoted in
 `.env.local` or it silently truncates. Vercel's env vars are unaffected.
 
+### Notifications (27 Nov 2026)
+
+The bell (beside search on Home, and `/notifications`) plus Web Push phone alerts.
+`lib/notify.ts`: `notify(event)` is called from server actions after the write and
+does its work in `after()`, so posting never waits on push services and a failure
+never fails the action. One row per event in `notifications` (`recipient` null =
+everyone); unread is "newer than `notification_settings.seen_at`", set by
+`MarkSeen` from the browser (never during render, which a prefetch would trigger).
+Owner keys are a person id, or `email:<address>` for an admin with no profile.
+Events: announcement, requirement, meeting (new only), circular, biodata (no name on
+the lock screen), comment on your post, your profile edited by someone else. Members
+mute kinds on the same screen; muted kinds leave the bell too.
+
+Push: `public/sw.js` caches nothing (served `no-cache`); `PushSetup` asks for
+permission only on a tap; iPhones need the app on the Home Screen (iOS 16.4+).
+Subscriptions are accepted only for the real push services' hosts (`isPushEndpoint`),
+since the server POSTs to them; 404/410 prunes a dead one; relinking a profile at
+/admin/claims drops its subscriptions. Keys `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`
+in `.env.local` and Vercel; never change them, or every subscription dies. Tables come
+from migration 010 and are read defensively. Not built: reminders before a meeting and
+admins' birthday digest (both need a daily schedule).
+
 ### Photos, server actions, theme
 
 - Uploads go to the private bucket `member-photos`; only the path is stored, served

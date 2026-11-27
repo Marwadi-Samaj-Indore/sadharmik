@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from "lucide-react";
+import { Bell, Heart, Search, Pin, ChevronRight, Sparkles, CalendarDays, MapPin, Flame } from "lucide-react";
 import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
 import { SectionHeading, Meter, Badge } from "@/components/ui";
@@ -15,6 +15,7 @@ import {
 } from "@/lib/util";
 import { ICON } from "@/lib/icons";
 import { requireMember } from "@/lib/guard";
+import { inboxFor, ownerKey } from "@/lib/notify";
 
 /**
  * "Rajesh-Sunita Shah" → "RS". A committee entry is a couple, so a single
@@ -31,6 +32,7 @@ function monogram(name: string): string {
 export default async function HomePage() {
   await requireMember();
   const [db, session] = await Promise.all([getDb(), getSession()]);
+  const { unread } = await inboxFor(ownerKey(session));
 
   // The committee's week ahead. Worked out only for admins: members never
   // see it, so there is no reason to compute it on their every visit.
@@ -84,13 +86,29 @@ export default async function HomePage() {
 
       {/* Search entry point — leads into the Directory */}
       <div className="px-4">
-        <Link
-          href="/directory"
-          className="flex min-h-[2.75rem] items-center gap-2 rounded-chip border border-line bg-surface px-4 py-2.5 text-sm text-ink-faint"
-        >
-          <Search size={ICON.sm} />
-          Search members, business, area…
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/directory"
+            className="flex min-h-[2.75rem] min-w-0 flex-1 items-center gap-2 rounded-chip border border-line bg-surface px-4 py-2.5 text-sm text-ink-faint"
+          >
+            <Search size={ICON.sm} className="shrink-0" />
+            <span className="truncate">Search members, business, area…</span>
+          </Link>
+          {/* The bell rides beside search rather than in the masthead, where
+              it pushed the app's name onto a third line at phone width */}
+          <Link
+            href="/notifications"
+            aria-label={unread ? `Notifications, ${unread} new` : "Notifications"}
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-surface transition-transform active:scale-95"
+          >
+            <Bell size={ICON.md} className="text-ink" />
+            {unread > 0 && (
+              <span className="tnum absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-clay-deep px-1 text-2xs font-bold text-surface">
+                {unread > 9 ? "9+" : unread}
+              </span>
+            )}
+          </Link>
+        </div>
 
         {/* Matrimony: asks boy or girl first, then lists unmarried members */}
         <Link

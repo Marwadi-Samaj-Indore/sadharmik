@@ -15,7 +15,8 @@ import {
 import { actorName, getSession } from "@/lib/session";
 import { removeImage, storeFile } from "@/lib/storage";
 import { withSavedFlag } from "@/lib/nav";
-import { cleanUrl, shortName } from "@/lib/util";
+import { cleanUrl, formatDateLong, shortName } from "@/lib/util";
+import { notify, ownerKey } from "@/lib/notify";
 import type { Meeting } from "@/lib/types";
 
 const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim();
@@ -60,6 +61,15 @@ export async function createMeeting(formData: FormData) {
     target: meeting.title,
     before: null,
     after: meeting,
+  });
+  notify({
+    kind: "meeting",
+    actor: ownerKey(session),
+    title: `New event: ${meeting.title}`,
+    body: [formatDateLong(meeting.meetingDate), meeting.meetingTime, meeting.location]
+      .filter(Boolean)
+      .join(" · "),
+    url: `/feed/meetings/${id}`,
   });
   revalidatePath("/", "layout");
   redirect(withSavedFlag(`/feed/meetings/${id}`, "meeting"));

@@ -13,6 +13,7 @@ const MESSAGES: Record<string, string> = {
   meeting: "Meeting saved",
   switched: "Switched. You are now using the app as this member",
   linked: "Sign-in link saved",
+  prefs: "Notification choices saved",
   unlinked: "Profile unlinked. Its devices are signed out",
 };
 

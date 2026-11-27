@@ -9,6 +9,7 @@ import {
   Info,
   UserPlus,
   ArrowLeftRight,
+  Bell,
 } from "lucide-react";
 import { getDb } from "@/lib/db";
 import { getSession } from "@/lib/session";
@@ -293,6 +294,15 @@ export default async function MePage() {
       {/* Appearance */}
       <section className="mt-6">
         <SectionHeading>Settings</SectionHeading>
+        <Link href="/notifications" className="card card-tap mx-4 mb-2 flex items-center gap-3.5 p-3.5">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-sun-pale">
+            <Bell size={ICON.md} className="text-sun-ink" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold">Notifications</span>
+            <span className="block text-xs text-ink-soft">Phone alerts and what you hear about</span>
+          </span>
+        </Link>
         <ThemeChoice current={theme} />
       </section>
 
